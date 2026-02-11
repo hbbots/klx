@@ -96,7 +96,21 @@ nav a.active::after{
         font-size: 1rem;
         line-height: 1.5;
     }
+.menu-btn {
+        display: block;
+        font-size: 1.8rem;
+        color: var(--gold);
+        cursor: pointer;
+    }
 
+    nav ul {
+        display: none; /* hide default nav links */
+    }
+    .side-nav {
+    left: -250px;
+    transition: .4s;
+}
+.side-nav.active { left: 0; }
     .hero div a {
         font-size: 0.95rem;
         padding: 12px 25px;
