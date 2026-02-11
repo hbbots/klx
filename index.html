@@ -36,21 +36,20 @@ body{font-family:Arial,Helvetica,sans-serif;background:#020202;color:#fff;scroll
 }
 
 .road {
-    width:80%;
-    height:50px;
+    width: 80%;
+    height: 60px;
     background: #111;
-    border-radius: 25px;
-    overflow:hidden;
-    margin-bottom:20px;
+    border-radius: 30px;
+    overflow: hidden;
+    margin-bottom: 20px;
     position: relative;
 }
-
 .truck {
     position:absolute;
-    left:-50px;
+    left:-60px;
     top:0;
-    width:50px;
-    height:50px;
+    width:60px;
+    height:60px;
     background: url('truck.png') no-repeat center/contain;
     animation: drive 3s linear infinite;
 }
@@ -582,8 +581,8 @@ canvas.height=window.innerHeight;
         loader.style.opacity = '0';
         setTimeout(() => {
             loader.style.display = 'none';
-        }, 600); // fade out
-    }, 3000); // 1 full truck animation
+        }, 600); 
+    }, 3000); 
 });
 
 </script>
