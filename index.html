@@ -261,6 +261,30 @@ nav a.active::after{
                 OPERATIONS INFO
             </a>
         </div>
+        <br>
+<div id="discord-members">Loading Discord members…</div>
+
+<script>
+async function fetchDiscordWidget() {
+    try {
+        const res = await fetch("https://discord.com/api/guilds/1436805420571431002/widget.json");
+        if (!res.ok) throw new Error("Failed to fetch");
+        const json = await res.json();
+
+        const online = json.presence_count ?? json.members.length;
+        document.getElementById("discord-members").innerText =
+            `👥 Admins Online : ${online}`;
+    } catch (err) {
+        document.getElementById("discord-members").innerText =
+            "Could not load Discord stats";
+        console.error(err);
+    }
+}
+
+fetchDiscordWidget();
+// Refresh every 60 seconds
+setInterval(fetchDiscordWidget, 60000);
+</script>
 
         <div style="display: flex; justify-content: center; gap: 40px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; flex-wrap: wrap;">
             <div>
@@ -470,6 +494,8 @@ nav a.active::after{
         </div>
     </div>
     <p class="copyright">&copy; 2026 KLX Refineries. All Rights Reserved. Engineered for Excellence.</p>
+
+
 </footer>
 
 <div class="phone" id="phone">
