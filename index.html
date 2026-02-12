@@ -25,40 +25,58 @@ body{font-family:Arial,Helvetica,sans-serif;background:#020202;color:#fff;scroll
     justify-content:center;
     align-items:center;
     z-index:9999;
-    font-family: Arial, sans-serif;
-    color: #FFD700; 
+    overflow:hidden;
 }
 
-#loading-screen p {
-    margin-top: 30px;
-    font-size: 1.5rem;
-    color: #fff;
+.loader-logo {
+    color: #FFD700;
+    font-size: 2rem;
+    margin-bottom: 30px;
+    text-shadow: 0 0 10px #00FFFF, 0 0 20px #a855f7;
+    animation: logoGlow 2s infinite alternate;
 }
 
+@keyframes logoGlow{
+    0% {text-shadow:0 0 5px #FFD700, 0 0 10px #00FFFF;}
+    100% {text-shadow:0 0 20px #FFD700, 0 0 40px #a855f7;}
+}
 
 .road {
     width: 100%;
-    height: 200px; 
+    height: 100px; 
     background: #111; 
     position: relative;
     overflow: hidden;
+    margin-bottom: 30px;
 }
-
 
 .truck {
     position: absolute;
-    left: -250px; /* start off-screen */
-    top: 20px; 
-    width: 640px; 
-    height: 160px;
+    left: -250px;
+    top: 10px;
+    width: 200px;
+    height: 80px;
     background: url('truck.png') no-repeat center/contain;
-    animation: drive 6s linear infinite;
+    animation: drive 5s linear infinite;
 }
-
 
 @keyframes drive {
     0% { left: -250px; }
     100% { left: 100%; }
+}
+
+#fuel-gauge {
+    margin-bottom: 30px;
+    transform: rotate(-90deg);
+}
+
+#loader-particles {
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index: -1;
 }
 
 .cursor{position:fixed;width:18px;height:18px;border-radius:50%;background:#a855f7;box-shadow:0 0 20px #a855f7,0 0 40px #7c3aed;pointer-events:none;transform:translate(-50%,-50%);z-index:9999;}
@@ -213,10 +231,19 @@ copyright {color:#444; font-size:0.9rem; border-top:1px solid rgba(255,255,255,0
 <body>
 
 <div id="loading-screen">
+  <h1 class="loader-logo">KLX Refineries</h1>
+  
   <div class="road">
     <div class="truck"></div>
   </div>
   
+  <svg id="fuel-gauge" width="120" height="120">
+    <circle cx="60" cy="60" r="50" stroke="#555" stroke-width="10" fill="none"/>
+    <circle cx="60" cy="60" r="50" stroke="#FFD700" stroke-width="10" fill="none"
+      stroke-dasharray="314" stroke-dashoffset="314"/>
+  </svg>
+  
+  <canvas id="loader-particles"></canvas>
 </div>
 
 <div class="cursor" id="cursor"></div>
@@ -575,16 +602,62 @@ canvas.height=window.innerHeight;
     window.onload = typingEffect;
 </script>
 <script>
-    window.addEventListener('load', function(){
-    const loader = document.getElementById('loading-screen');
+    // Animate fuel gauge
+const gauge = document.querySelector("#fuel-gauge circle:nth-child(2)");
+let dashOffset = 314; // 2 * PI * 50
+let gaugeProgress = 0;
 
-    
+function fillGauge(){
+    if(gaugeProgress < dashOffset){
+        gaugeProgress += 4; // speed
+        gauge.style.strokeDashoffset = dashOffset - gaugeProgress;
+        requestAnimationFrame(fillGauge);
+    }
+}
+fillGauge();
+
+// Particle animation
+const canvas = document.getElementById('loader-particles');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+let particles = [];
+for(let i=0;i<80;i++){
+    particles.push({
+        x: Math.random()*canvas.width,
+        y: Math.random()*canvas.height,
+        size: 2+Math.random()*3,
+        speed: 2+Math.random()*3
+    });
+}
+
+function animateParticles(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+        ctx.fillStyle = "rgba(0, 255, 255, 0.15)";
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+        ctx.fill();
+        p.y += p.speed;
+        if(p.y>canvas.height) { p.y=0; p.x=Math.random()*canvas.width; }
+    });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+window.addEventListener("resize",()=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+
+// Smooth fade-out loader
+window.addEventListener('load', function(){
+    const loader = document.getElementById('loading-screen');
     setTimeout(() => {
         loader.style.opacity = '0';
-        setTimeout(() => {
-            loader.style.display = 'none';
-        }, 600); 
-    }, 2000); 
+        setTimeout(()=>{ loader.style.display='none'; }, 600);
+    }, 2500); // match fuel gauge animation
 });
 
 </script>
