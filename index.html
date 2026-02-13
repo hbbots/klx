@@ -434,7 +434,9 @@ border-bottom: 2px solid var(--violet);
         <div class="card"><img src="club.jpg"></div>  
     </div>  
 </section> -->  
-<div class="fuel-form">
+
+
+<form id="enlistForm" class="fuel-form">
 
 <h2 style="color:#00FFFF;text-align:center;margin-bottom:25px;">
 ⚡ Fuel Order Control Panel
@@ -442,17 +444,17 @@ border-bottom: 2px solid var(--violet);
 
 <div class="form-group">
 <label>Operator Name</label>
-<input type="text">
+<input type="text" name="Operator Name" required>
 </div>
 
 <div class="form-group">
 <label>Discord ID</label>
-<input type="text">
+<input type="text" name="Discord ID" required>
 </div>
 
 <div class="form-group">
 <label>Fuel Type</label>
-<select>
+<select name="Fuel Type">
 <option>Petrol</option>
 <option>Diesel</option>
 <option>Premium</option>
@@ -461,17 +463,17 @@ border-bottom: 2px solid var(--violet);
 
 <div class="form-group">
 <label>Quantity (Litres)</label>
-<input type="number">
+<input type="number" name="Quantity" required>
 </div>
 
 <div class="form-group">
 <label>Delivery Zone</label>
-<input type="text">
+<input type="text" name="Delivery Zone">
 </div>
 
 <div class="form-group">
 <label>Priority Level</label>
-<select>
+<select name="Priority">
 <option>Standard</option>
 <option>High Priority</option>
 <option>Emergency</option>
@@ -480,16 +482,17 @@ border-bottom: 2px solid var(--violet);
 
 <div class="form-group">
 <label>Special Instructions</label>
-<textarea rows="4"></textarea>
+<textarea rows="4" name="Instructions"></textarea>
 </div>
 
-<button class="submit-btn">
+<button type="submit" class="submit-btn">
 🚚 Dispatch Fuel Order
 </button>
 
-</div>
-
-</div>  <footer>  
+</form>
+    
+<select>
+  <footer>  
     <div class="footer-content">  
         <div class="footer-logo">KLX REFINERIES</div>  
         <div class="footer-links">  
