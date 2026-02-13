@@ -633,7 +633,75 @@ canvas.height=window.innerHeight;
         }  
     }  
     window.onload = typingEffect;  
-</script>  <script>
+</script> <script>
+
+// =============================
+// ORDER ID GENERATOR
+// =============================
+function generateOrderID(){
+return "KLX-" + Math.random().toString(36).substring(2,8).toUpperCase();
+}
+
+let currentOrderID = generateOrderID();
+document.getElementById("liveOrderId").innerText = currentOrderID;
+
+
+// =============================
+// FORM SUBMIT
+// =============================
+document.getElementById("enlistForm")
+.addEventListener("submit", async (e)=>{
+
+e.preventDefault();
+
+const btn = document.querySelector(".fuel-submit");
+btn.classList.add("loading");
+
+const form = e.target;
+const data = new FormData(form);
+
+let fields = "";
+for (let [key,value] of data.entries()){
+fields += `**${key}:** ${value}\n`;
+}
+
+const payload = {
+content:
+`📥 **NEW FUEL ORDER RECEIVED**
+🆔 **ORDER ID:** ${currentOrderID}
+
+${fields}
+
+⚡ KLX DISPATCH TERMINAL`
+};
+
+try{
+
+await fetch("https://discord.com/api/webhooks/1471097575300923627/dA3VMy5M-41RtoTk47SpByVU7utobBCXufQCc6Le2krEllH5zVs9tMeM2pkBnJ40vbGP",{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify(payload)
+});
+
+alert("🚚 Order Dispatched Successfully!");
+
+form.reset();
+
+currentOrderID = generateOrderID();
+document.getElementById("liveOrderId").innerText = currentOrderID;
+
+}catch(err){
+
+console.error(err);
+alert("❌ Dispatch Failed");
+
+}
+
+btn.classList.remove("loading");
+
+});
+
+</script> <script>
 
 document.getElementById("enlistForm")
 .addEventListener("submit", async (e)=>{
