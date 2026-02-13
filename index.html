@@ -1,463 +1,298 @@
-<!DOCTYPE html>  <html lang="en">    <head>    
-    <meta charset="UTF-8">    
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">    
-    <title>KLX Refineries</title>    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">    
-    <link rel="icon" type="image/jpg" href="klux.jpg">    
-    <style>    
-       *{margin:0;padding:0;box-sizing:border-box;cursor:none;}    
-body{font-family:Arial,Helvetica,sans-serif;background:#020202;color:#fff;scroll-behavior:smooth;overflow-x:hidden;}  :root{--gold:#FFD700;--neon:#00FFFF;--violet:#a855f7;--discord:#7289DA;--insta:#E1306C;--card-bg:rgba(255,255,255,0.03);}  .cursor{position:fixed;width:18px;height:18px;border-radius:50%;background:#a855f7;box-shadow:0 0 20px #a855f7,0 0 40px #7c3aed;pointer-events:none;transform:translate(-50%,-50%);z-index:9999;}
-#rain{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>KLX Dispatch Terminal</title>
 
-nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);width:92%;padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center;background:rgba(20,20,25,0.25);backdrop-filter:blur(18px);border-radius:14px;z-index:1000;border:1px solid rgba(255,255,255,0.08);box-shadow:0 0 25px rgba(0,234,255,0.1);}
-nav .logo{color:var(--gold);font-weight:bold;letter-spacing:1px;animation:logopulse 3s infinite alternate;}
-@keyframes logopulse{from{text-shadow:0 0 5px var(--gold);}to{text-shadow:0 0 18px var(--neon);}}
-nav ul{display:flex;gap:1.5rem;list-style:none;}
-nav a{text-decoration:none;color:#ddd;padding:6px 10px;position:relative;transition:.3s;}
-nav a::after{content:"";position:absolute;left:0;bottom:-6px;width:0%;height:2px;background:linear-gradient(90deg,var(--neon),var(--violet));transition:.35s;}
-nav a:hover{color:var(--neon);text-shadow:0 0 10px var(--neon);}
-nav a:hover::after{width:100%;}
-nav a.active{color:var(--gold);}
-nav a.active::after{width:100%;background:var(--gold);}
-
-.side-nav{position:fixed;top:0;left:-250px;width:250px;height:100%;background:rgba(20,20,25,0.95);backdrop-filter:blur(15px);display:flex;flex-direction:column;padding:60px 20px;gap:25px;transition:.4s;z-index:1001;border-right:1px solid rgba(255,255,255,0.08);}
-.side-nav a{color:#fff;font-size:1.2rem;font-weight:bold;text-decoration:none;}
-.side-nav.active{left:0;}
-.menu-btn{display:none;cursor:pointer;}
-
-.hero{height:100vh; display:flex; justify-content:center; align-items:center; text-align:center; background:url('klux.jpg') center/cover no-repeat; position:relative;}
-.hero::before{content:""; position:absolute; inset:0; background:linear-gradient(to bottom,#000000cc,#000000ee);}
-.hero h1{font-size:4rem; color:var(--gold); text-shadow:0 0 25px var(--neon); position:relative; line-height:1.1;}
-.hero .role{color:var(--neon); font-size:1rem; display:block; margin-bottom:10px;}
-.hero p{font-size:1.1rem; color:#ccc; line-height:1.6; max-width:600px; margin:0 auto 30px;}
-
-section{padding:6rem 12%; text-align:center;}
-section h1{color:var(--gold); margin-bottom:1rem; font-size:2.5rem; text-transform:uppercase; letter-spacing:3px;}
-
-.cards{display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem; margin-top:2rem;}
-.card{border-radius:16px; overflow:hidden; background:var(--card-bg); backdrop-filter:blur(16px); border:1px solid rgba(0,234,255,0.1); transition:0.35s; padding-bottom:15px;}
-.card img{width:100%; height:240px; object-fit:cover; filter:brightness(0.7); transition:0.35s;}
-.card:hover img{transform:scale(1.05); filter:brightness(1);}
-.card:hover {
-box-shadow: 0 0 35px rgba(0,255,255,0.4), 0 0 50px rgba(168,85,247,0.3);
-border-color: var(--neon);
-}
-.role{color:var(--neon); font-size:0.85rem; letter-spacing:1px; display:block; margin-top:5px;}
-
-.about-card{backdrop-filter: blur(20px); background: var(--card-bg); border-radius:20px; padding:40px; border:1px solid rgba(255,255,255,0.08);}
-.typing-text{font-size:22px; color:var(--neon); min-height:30px; margin-bottom:20px;}
-.highlight{color:var(--neon); font-weight:bold; animation:glow 2s infinite alternate;}
-@keyframes glow{ from{text-shadow:0 0 5px var(--neon);} to{text-shadow:0 0 15px var(--neon);} }
-.taglines span{padding:10px 18px; border-radius:15px; background:rgba(0,255,255,0.05); border:1px solid rgba(0,255,255,0.2); margin: 5px; display: inline-block;}
-
-.recruitment-container {display:flex;flex-direction:column;align-items:center;gap:3rem;margin-top:2rem;}
-.contact-grid {display:grid; grid-template-columns:1fr 1fr; gap:2rem; width:100%; max-width:1100px; text-align:left;}
-.info-panel {background: rgba(255, 255, 255, 0.03); padding: 30px; border-radius: 20px; border: 1px solid rgba(0, 234, 255, 0.1);}
-.info-panel h2 { color: var(--neon); margin-bottom: 15px; }
-.info-panel ul { list-style: none; }
-.info-panel li { margin-bottom: 12px; color: #ccc; display: flex; align-items: center; gap: 10px; }
-.info-panel li i { color: var(--gold); }
-.cta-panel {display:flex;flex-direction:column;justify-content:center;gap:1.5rem;}
-.contact-link {display:flex;align-items:center;padding:20px 30px;border-radius:15px;text-decoration:none;color:#fff;font-size:1.2rem;font-weight:bold;transition:0.4s;border:1px solid rgba(255,255,255,0.1);}
-.contact-link.discord {background:linear-gradient(45deg,#5865F2,#7289DA);}
-.contact-link.insta {background:linear-gradient(45deg,#833ab4,#fd1d1d,#fcb045);}
-.contact-link:hover {
-transform: translateY(-5px);
-box-shadow: 0 0 20px var(--neon), 0 0 40px var(--violet);
-}
-.contact-link i {font-size:1.8rem; margin-right:15px;}
-
-footer {background:#050505; padding:50px 12% 20px; border-top:1px solid rgba(255,255,255,0.05); text-align:center;}
-.footer-content {display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem; margin-bottom:30px;}
-.footer-logo {font-size:1.5rem; font-weight:bold; color:var(--gold);}
-.footer-links {display:flex; gap:20px;}
-.footer-links a {color:#888;text-decoration:none;transition:0.3s;}
-.footer-links a:hover {color:var(--neon);}
-copyright {color:#444; font-size:0.9rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:20px;}
-.phone a.discord {
-background: linear-gradient(45deg,#5865F2,#7289DA);
-color: #fff;
-border-radius: 15px;
-padding: 15px;
-text-decoration: none;
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: bold;
-gap: 10px;
+<style>
+:root{
+--bg:#020202;
+--panel:#0a0a0a;
+--border:#151515;
+--neon:#00ffff;
+--gold:#ffd700;
+--text:#e6e6e6;
 }
 
-.phone a.discord i {
-font-size: 1.5rem;
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+
+body{
+background:radial-gradient(circle at top,#050505,#000);
+color:var(--text);
 }
 
-.phone a.insta {
-background: linear-gradient(45deg,#833ab4,#fd1d1d,#fcb045);
-color: #fff;
-border-radius: 15px;
-padding: 15px;
-text-decoration: none;
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: bold;
-gap: 10px;
+/* NAVBAR */
+
+nav{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#000;
+border-bottom:1px solid var(--border);
 }
 
-.phone a.insta i {
-font-size: 1.5rem;
+nav ul{
+display:flex;
+gap:25px;
+list-style:none;
 }
 
-.reveal{opacity:0; transform:translateY(40px); transition:1s;}
-.reveal.active{opacity:1;transform:translateY(0);}
-.phone{position:fixed; right:-360px; top:50%; transform:translateY(-50%); width:220px; background:rgba(0,0,0,0.6); border-radius:30px; padding:20px; transition:.5s; z-index:2000; display:flex; flex-direction:column; gap:15px; backdrop-filter:blur(15px); border:1px solid rgba(0,234,255,0.2);}
-.phone.active{right:20px;}
-.phone-btn{position:fixed; right:20px; bottom:20px; background:var(--gold); color:#111; border:none; padding:18px; border-radius:50%; font-size:22px; z-index:2001; box-shadow:0 0 25px rgba(255,215,0,0.6); transition:.3s;}
-
-@media (min-width: 1024px) {
-.hero {
-align-items: flex-start;
-padding-top: 120px;
-}
+nav a{
+text-decoration:none;
+color:#ccc;
+font-size:13px;
+letter-spacing:1px;
 }
 
-@media (max-width: 992px) {
-.about-card {padding: 30px;}
-.about-desc { font-size: 1.05rem; padding:18px;}
-.tagline-grid { grid-template-columns: repeat(auto-fit,minmax(150px,1fr)); gap:12px;}
-}
-@media (max-width: 768px) {
-.hero {height:auto; padding:120px 15px 60px; justify-content:flex-start; text-align:center;}
-.hero h1 {font-size:2.4rem;}
-.hero .role {font-size:1rem; margin-bottom:12px; display:block;}
-.hero p {font-size:1rem; line-height:1.5;}
-.hero div a {font-size:0.95rem; padding:12px 25px;}
-.contact-grid {grid-template-columns:1fr;}
-.footer-content {flex-direction:column;}
-nav ul {display:none;}
-.menu-btn {display:block;}
-}
-@media (max-width: 480px) {
-.about-card {padding:18px;}
-.about-desc {font-size:0.92rem; padding:12px;}
-.tagline-grid span {font-size:0.8rem; padding:10px;}
-.hero h1 {font-size:2rem;}
-.hero .role {font-size:0.9rem;}
-.hero p {font-size:0.9rem;}
-}
-</style>
+nav a:hover{color:var(--neon)}
 
-</head>    
-<body>    
-  </div>  </div>  <div class="cursor" id="cursor"></div>    
-<canvas id="rain"></canvas>  <nav>    
-    <div class="logo">KLX Refineries</div>    
-    <i class="fa fa-bars menu-btn" onclick="toggleSideNav()" style="cursor:pointer"></i>    
-    <ul>    
-        <li><a href="#hero">Home</a></li>    
-        <li><a href="#about">About</a></li>    
-        <li><a href="#services">Services</a></li>    
-        <li><a href="#leaders">Leaders</a></li>    
-        <li><a href="#gallery">Gallery</a></li>    
-        <li><a href="#contact">Enlist</a></li> 
-        <li><a href="#booking.html">Booking</a></li>
-    </ul>  </nav>  <div class="side-nav" id="sideNav">    
-    <a href="#hero" onclick="closeSideNav()">Home</a>    
-    <a href="#about" onclick="closeSideNav()">About</a>    
-    <a href="#services" onclick="closeSideNav()">Services</a>    
-    <a href="#leaders" onclick="closeSideNav()">Leaders</a>    
-    <a href="#gallery" onclick="closeSideNav()">Gallery</a>    
-    <a href="#contact" onclick="closeSideNav()">Contact</a>    
-</div>  <section class="hero" id="hero">    
-    <div class="hero-content reveal">    
-        <span class="role" style="font-weight: bold; margin-bottom: 10px;">ESTABLISHED 2026</span>    
-      <h1 style="line-height:1.1;margin-bottom:20px;">  
-    <span style="color:#FFD700;text-shadow:0 0 25px #FFD700;">  
-        WE FUEL THE  
-    </span><br>  
-    <span style="color:white;text-shadow:0 0 25px white;">  
-        CITY  
-    </span>  
-</h1>  <p style="max-width: 600px; margin: 0 auto 30px; color: #ccc; font-size: 1.1rem; line-height: 1.6;">    
-        KLX Refineries stands as an elite industrial powerhouse, dominating high-yield fuel mining, precision refining, and strategic citywide distribution. Built on discipline, coordination, and relentless efficiency  we keep the engines of the city running without interruption.    
-    </p>    <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">    
-    <a href="booking.html" style="text-decoration: none; padding: 15px 35px; background: var(--gold); color: #000; font-weight: bold; border-radius: 8px; transition: 0.3s; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);">    
-        Book Orders    
-    </a>    
-    <a href="#about" style="text-decoration: none; padding: 15px 35px; border: 1px solid var(--neon); color: var(--neon); font-weight: bold; border-radius: 8px; transition: 0.3s; backdrop-filter: blur(5px);">    
-        OPERATIONS INFO    
-    </a>    
-</div>    
- <br>
+/* HERO */
 
-<div id="discord-members">Loading Discord members…</div>  <script>    
-async function fetchDiscordWidget() {    
-    try {    
-        const res = await fetch("https://discord.com/api/guilds/1436805420571431002/widget.json");    
-        if (!res.ok) throw new Error("Failed to fetch");    
-        const json = await res.json();    const online = json.presence_count ?? json.members.length;    
-    document.getElementById("discord-members").innerText =    
-        `👥 Admins Online : ${online}`;    
-} catch (err) {    
-    document.getElementById("discord-members").innerText =    
-        "Could not load Discord stats";    
-    console.error(err);    
+.hero{
+text-align:center;
+padding:70px 20px 40px;
 }
 
+.hero h1{
+color:var(--neon);
+font-size:38px;
+letter-spacing:3px;
+margin-bottom:10px;
 }
 
-fetchDiscordWidget();
-
-setInterval(fetchDiscordWidget, 60000);
-</script>  <div style="display: flex; justify-content: center; gap: 40px; margin-top: 60px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 30px; flex-wrap: wrap;">
-<div>
-<h2 style="color: var(--gold); font-size: 1.8rem;">100%</h2>
-<p style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 2px;">Market Dominance</p>
-</div>
-<div>
-<h2 style="color: var(--gold); font-size: 1.8rem;">24/7</h2>
-<p style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 2px;">Refinery Activity</p>
-</div>
-<div>
-<h2 style="color: var(--gold); font-size: 1.8rem;">35+</h2>
-<p style="font-size: 0.7rem; color: #888; text-transform: uppercase; letter-spacing: 2px;">Petrol Pumps</p>
-</div>
-</div>
-
-</div>  </section>    
-<style>  .about-card {    
-border: 1px solid rgba(0, 234, 255, 0.2);    
-position: relative;    
-overflow: visible;    
-padding: 40px;    
-border-radius: 20px;    
-backdrop-filter: blur(20px);    
-background: var(--card-bg);  }
-
-.about-card::before {
-content: "KLX-SECURE-DATA";
-position: absolute;
-top: 10px;
-right: 20px;
-font-size: 0.6rem;
-color: var(--neon);
-opacity: 0.5;
-letter-spacing: 2px;
+.hero p{
+opacity:.6;
 }
 
-.about-desc {
-line-height: 1.8;
-font-size: 1.1rem;
-color: #bbb;
-max-width: 900px;
-margin: 20px auto;
-padding: 20px;
-background: rgba(0, 0, 0, 0.3);
-border-left: 3px solid var(--gold);
-text-align: left;
+/* TERMINAL CARD */
+
+.wrapper{
+max-width:900px;
+margin:auto;
+padding:20px;
 }
 
-.tagline-grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-gap: 15px;
-margin: 40px 0;
+.terminal{
+background:linear-gradient(145deg,#050505,#000);
+border:1px solid var(--border);
+border-radius:14px;
+padding:35px;
+position:relative;
+overflow:hidden;
+box-shadow:0 0 40px rgba(0,255,255,0.05);
 }
 
-.tagline-grid span {
-background: rgba(255, 215, 0, 0.05);
-border: 1px solid rgba(255, 215, 0, 0.1);
-padding: 12px;
-font-size: 0.9rem;
-transition: 0.3s;
-text-transform: uppercase;
-letter-spacing: 1px;
-text-align: center;
+/* scan effect */
+.terminal::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(
+transparent,
+rgba(0,255,255,0.04),
+transparent
+);
+animation:scan 6s linear infinite;
+pointer-events:none;
 }
 
-.tagline-grid span:hover {
-background: rgba(0, 234, 255, 0.1);
-border-color: var(--neon);
-color: var(--neon);
-transform: translateY(-3px);
+@keyframes scan{
+0%{transform:translateY(-100%)}
+100%{transform:translateY(100%)}
 }
 
-.quote-container {
-display: flex;
-flex-wrap: wrap;
-justify-content: center;
-gap: 20px;
-margin-top: 50px;
-padding-top: 30px;
-border-top: 1px dashed rgba(255,255,255,0.1);
+/* ORDER ID */
+
+.order-id{
+border:1px solid var(--neon);
+padding:10px;
+text-align:center;
+letter-spacing:2px;
+color:var(--neon);
+margin-bottom:25px;
+font-size:13px;
 }
 
-.mission-quote {
-font-style: italic;
-color: var(--neon);
-font-size: 0.95rem;
-background: linear-gradient(120deg, rgba(0,234,255,0.1), rgba(168,85,247,0.1));padding: 10px 20px;
-border-radius: 5px;
-border-bottom: 2px solid var(--violet);
+/* GRID FORM */
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+}
+
+.full{grid-column:span 2;}
+
+label{
+font-size:12px;
+opacity:.7;
+margin-bottom:6px;
+display:block;
+}
+
+input,select,textarea{
+width:100%;
+padding:13px;
+background:#000;
+border:1px solid #1a1a1a;
+border-radius:7px;
+color:#fff;
+}
+
+input:focus,select:focus,textarea:focus{
+outline:none;
+border-color:var(--neon);
+box-shadow:0 0 10px rgba(0,255,255,0.15);
+}
+
+/* SUBMIT */
+
+.submit{
+margin-top:25px;
+width:100%;
+padding:15px;
+border:1px solid var(--neon);
+background:#000;
+color:var(--neon);
+letter-spacing:2px;
+cursor:pointer;
+position:relative;
+overflow:hidden;
+}
+
+.submit:hover{box-shadow:0 0 15px var(--neon)}
+
+.bar{
+position:absolute;
+bottom:0;
+left:0;
+height:4px;
+width:0%;
+background:var(--neon);
+transition:width 1s linear;
+}
+
+.submit.loading .bar{width:100%}
+
+footer{
+margin-top:40px;
+padding:25px;
+text-align:center;
+font-size:13px;
+opacity:.5;
+border-top:1px solid var(--border);
+}
+
+/* responsive */
+
+@media(max-width:700px){
+.grid{grid-template-columns:1fr;}
+.full{grid-column:span 1;}
 }
 </style>
+</head>
 
-<section id="about" class="reveal">    
-    <div class="about-card">    
-        <h1 class="about-title" style="margin-bottom: 5px;">About US</h1>    
-        <div style="width: 50px; height: 2px; background: var(--gold); margin: 0 auto 20px;"></div>  <h2 class="typing-text"><span id="typing"></span></h2>    <div class="about-desc">    
-    KLX Refineries is an <span class="highlight">elite industrial powerhouse</span> dominating the energy sector through     
-    <span class="highlight">high-yield fuel mining</span> and <span class="highlight">precision processing</span>.     
-    We don't just supply fuel; we control the city's pulse through tactical coordination and an unbreakable chain of command.     
-    From deep-vein extraction to high-security distribution, our presence ensures the grid stays online.    
-</div>    
+<body>
 
-<div class="tagline-grid">    
-    <span>⛏ Mine Hard</span>    
-    <span>⚙ Refine Smart</span>    
-    <span>🚚 Distribute Fast</span>    
-    <span>🔥 Power the Streets</span>    
-    <span>🛢 Control the Supply</span>    
-    <span>⚡ Fuel the Future</span>    
-    <span>🏭 Industrial Precision</span>    
-    <span>🧠 Tactical Operations</span>    
-    <span>🔒 Loyalty Above All</span>    
-</div>    
+<nav>
+<div>⚡ KLX REFINERIES</div>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="index.html#about">About</a></li>
+<li><a href="index.html#services">Services</a></li>
+<li><a href="index.html#leaders">Leaders</a></li>
+<li><a href="index.html#gallery">Gallery</a></li>
+<li><a href="index.html#contact">Enlist</a></li>
+</ul>
+</nav>
 
-<div class="quote-container">    
-    <div class="mission-quote">"Fuel is power. Power is control."</div>    
-    <div class="mission-quote">"The city moves because KLX moves first."</div>    
-    <div class="mission-quote">"No shortages. No delays. Only precision."</div>    
-    <div class="mission-quote">"Elite energy. Relentless execution."</div>    
+<section class="hero">
+<h1>FUEL DISPATCH TERMINAL</h1>
+<p>Authorized KLX Operators — Precision Booking System</p>
+</section>
+
+<div class="wrapper">
+
+<form id="enlistForm" class="terminal">
+
+<div class="order-id">
+ORDER ID: <span id="liveOrderId">GENERATING...</span>
 </div>
 
-</div>  </section>    
-<section id="services" class="reveal">    
-    <h1>Our Operations</h1>    
-    <div class="cards">    
-        <div class="card"><img src="mining.jpg"><h3>Fuel Mining</h3></div>    
-        <div class="card"><img src="pipe.jpg"><h3>Refinery Processing</h3></div>    
-        <div class="card"><img src="distribution.jpeg"><h3>Distribution</h3></div>    
-    </div>    
-</section>  <section id="leaders" class="reveal">    
-    <h1>Leadership</h1>    
-    <div class="cards">    
-        <div class="card"><img src="MANAGER.png"><h3>Climber Sura</h3><span class="role">CEO</span></div>    
-        <div class="card"><img src="CEO.png"><h3>Phantom Pyli</h3><span class="role">Manager</span></div>    
-        <div class="card"><img src="LEGAL.png"><h3>Charles Xavier</h3><span class="role">Legal Advisor</span></div>    
-    </div>    
-</section>  <!-- <section id="gallery" class="reveal">    
-    <h1>Operations Gallery</h1>    
-    <div class="cards">    
-        <div class="card"><img src="station1.jpg"></div>    
-        <div class="card"><img src="station2.jpg"></div>    
-        <div class="card"><img src="refinery.jpg"></div>    
-        <div class="card"><img src="club.jpg"></div>    
-    </div>    
-</section> -->  <section id="contact" class="reveal">    
-    <h1>Recruitment</h1>    
-    <div class="recruitment-container">    
-        <div class="contact-grid">    
-            <div class="info-panel">    
-                <h2>Join The Elite</h2>    
-                <p style="margin-bottom: 20px; color: #aaa;">We are looking for disciplined individuals to maintain the city's vital fuel supply line. Are you ready?</p>    
-                <ul>    
-                    <li><i class="fa-solid fa-check-double"></i> High Discipline & Loyalty</li>    
-                    <li><i class="fa-solid fa-truck-fast"></i> Active Participation in Shifts</li>    
-                    <li><i class="fa-solid fa-shield-halved"></i> Ability to follow Chain of Command</li>    
-                    <li><i class="fa-solid fa-microphone"></i> Clear Communication Skills</li>    
-                </ul>    
-            </div>    
-            <div class="cta-panel">    
-                <a href="https://discord.gg/TcZbvdeHr" target="_blank" class="contact-link discord">    
-                    <i class="fa-brands fa-discord"></i>    
-                    <div>    
-                        <span>Apply via Discord</span>    
-                        <p style="font-size: 0.8rem; font-weight: normal; opacity: 0.8;">Join our recruitment channel</p>    
-                    </div>    
-                </a>    
-                <a href="https://www.instagram.com/_klx_official" target="_blank" class="contact-link insta">    
-                    <i class="fa-brands fa-instagram"></i>    
-                    <div>    
-                        <span>Follow Us</span>    
-                        <p style="font-size: 0.8rem; font-weight: normal; opacity: 0.8;">@_klx_official</p>    
-                    </div>    
-                </a>    
-            </div>    
-        </div>    
-    </div>    
-</section>  <footer>    
-    <div class="footer-content">    
-        <div class="footer-logo">KLX REFINERIES</div>    
-        <div class="footer-links">    
-            <a href="#hero">Home</a>    
-            <a href="#about">About</a>    
-            <a href="#services">Services</a>    
-            <a href="#services">Services</a>    
-            <a href="booking.html">Booking</a>    
-        </div>    
-    </div>    
-   <p class="footer-copy">&copy; 2026 KLX Refineries. Engineered for Excellence. <span class="developer-credit">Developed by Hb</span></p>  </footer>  <div class="phone" id="phone">    
-    <a href="https://discord.gg/TcZbvdeHr" target="_blank" class="discord">    
-        <i class="fa-brands fa-discord"></i>    
-        <span>Discord</span>    
-    </a>    
-    <a href="https://www.instagram.com/_klx_official" target="_blank" class="insta">    
-        <i class="fa-brands fa-instagram"></i>    
-        <span>Instagram</span>    
-    </a>    
-</div>    
-<button class="phone-btn" onclick="togglePhone()"><i class="fa-solid fa-phone"></i></button>  <script>    const cursor=document.getElementById("cursor");    
-document.addEventListener("mousemove",e=>{cursor.style.left=e.clientX+"px";cursor.style.top=e.clientY+"px";});    
+<div class="grid">
 
-   
-function toggleSideNav(){document.getElementById("sideNav").classList.toggle("active");}    
-function closeSideNav(){document.getElementById("sideNav").classList.remove("active");}    
-function togglePhone(){document.getElementById("phone").classList.toggle("active");}    
+<div>
+<label>Operator Name</label>
+<input name="Operator Name" required>
+</div>
 
-    
-const sections=document.querySelectorAll("section");    
-const navLinks=document.querySelectorAll("nav a");    
-window.addEventListener("scroll",()=>{    
-    let current="";    
-    sections.forEach(sec=>{const top=sec.offsetTop-200;if(window.pageYOffset>=top){current=sec.getAttribute("id");}});    
-    navLinks.forEach(a=>{a.classList.remove("active");if(a.getAttribute("href")=="#"+current){a.classList.add("active");}});    
-        
-    const reveals = document.querySelectorAll(".reveal");    
-    reveals.forEach(el=>{if(el.getBoundingClientRect().top<window.innerHeight-100){el.classList.add("active");}});    
-});    
+<div>
+<label>Discord ID</label>
+<input name="Discord ID" required>
+</div>
 
-   
-const canvas=document.getElementById('rain');    
-const ctx=canvas.getContext('2d');    
-canvas.width=window.innerWidth; canvas.height=window.innerHeight;    
-let rain=[];    
-for(let i=0;i<100;i++){rain.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,len:20,speed:7});}    
-function drawRain(){    
-    ctx.clearRect(0,0,canvas.width,canvas.height);    
-    ctx.strokeStyle = "rgba(0, 255, 255, 0.15)";      
-    rain.forEach(r=>{ctx.beginPath();ctx.moveTo(r.x,r.y);ctx.lineTo(r.x,r.y+r.len);ctx.stroke();r.y+=r.speed;if(r.y>canvas.height){r.y=-20;r.x=Math.random()*canvas.width;}});    
-    requestAnimationFrame(drawRain);    
-}    
-drawRain();    
+<div>
+<label>Fuel Type</label>
+<select name="Fuel Type">
+<option>Petrol</option>
+<option>Diesel</option>
+<option>Premium</option>
+</select>
+</div>
 
-window.addEventListener("resize",()=>{
+<div>
+<label>Quantity (Litres)</label>
+<input type="number" name="Quantity" required>
+</div>
 
-canvas.width=window.innerWidth;
-canvas.height=window.innerHeight;
+<div class="full">
+<label>Delivery Zone</label>
+<input name="Delivery Zone">
+</div>
+
+<div class="full">
+<label>Instructions</label>
+<textarea name="Instructions"></textarea>
+</div>
+
+</div>
+
+<button class="submit">
+DISPATCH ORDER
+<div class="bar"></div>
+</button>
+
+</form>
+
+</div>
+
+<footer>
+© 2026 KLX Refineries — Enterprise Dispatch System
+</footer>
+
+<script>
+const discordInput=document.querySelector('input[name="Discord ID"]');
+const orderDisplay=document.getElementById("liveOrderId");
+
+discordInput.addEventListener("input",()=>{
+orderDisplay.innerText=discordInput.value?
+"KLX-"+discordInput.value:"GENERATING...";
 });
 
-const text="Elite Fuel Operations • Mining • Refining • Distribution";    
-let idx=0;    
-function typingEffect(){    
-    if(idx < text.length){    
-        document.getElementById("typing").innerHTML += text.charAt(idx);    
-        idx++;    
-        setTimeout(typingEffect, 50);    
-    }    
-}    
-window.onload = typingEffect;
+document.getElementById("enlistForm")
+.addEventListener("submit",(e)=>{
+e.preventDefault();
+const btn=document.querySelector(".submit");
+btn.classList.add("loading");
 
-</script>   </body>
+setTimeout(()=>{
+btn.classList.remove("loading");
+alert("Order Submitted (Webhook Ready)");
+},1500);
+});
+</script>
 
-</html>  
+</body>
+</html>
