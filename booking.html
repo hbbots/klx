@@ -133,15 +133,21 @@ color:var(--text-dim);
 <div class="grid">
 
 <div>
-<label>Discord Username (AUTO LATER)</label>
-<input type="text" name="Discord Name" id="discordInput" required>
+<label>In Game Name</label>
+<input type="text" name="GameName" required>
+</div>
+
+<div>
+<label>Discord Name</label>
+<input type="text" name="DiscordName" required>
 </div>
 
 <div>
 <label>Fuel Type</label>
 <select name="Fuel">
-<option>Petrol</option>
+<option>Regular</option>
 <option>Diesel</option>
+<option>Plus</option>
 <option>Premium</option>
 </select>
 </div>
@@ -182,7 +188,6 @@ color:var(--text-dim);
 <script>
 const webhookURL="https://discord.com/api/webhooks/1471097575300923627/dA3VMy5M-41RtoTk47SpByVU7utobBCXufQCc6Le2krEllH5zVs9tMeM2pkBnJ40vbGP";
 
-const discordInput=document.getElementById("discordInput");
 const orderDisplay=document.getElementById("liveOrderId");
 
 function generateID(){
@@ -204,7 +209,8 @@ content:
 `🚚 NEW FUEL ORDER
 
 🆔 ${currentID}
-💬 ${form.get("Discord Name")}
+🎮 ${form.get("GameName")}
+💬 ${form.get("DiscordName")}
 
 ⛽ ${form.get("Fuel")}
 📦 ${form.get("Quantity")} L
