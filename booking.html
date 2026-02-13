@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>KLX Fuel Booking Terminal</title>
+
+<style>
+
+:root{
+--bg:#020202;
+--card:#0a0a0a;
+--neon:#00ffff;
+--gold:#ffd700;
+--text:#e6e6e6;
+}
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:var(--bg);
+color:var(--text);
+}
+
+/* NAVBAR */
+
+nav{
+display:flex;
+justify-content:space-between;
+padding:15px 40px;
+border-bottom:1px solid #111;
+background:#000;
+}
+
+nav ul{
+display:flex;
+list-style:none;
+gap:25px;
+}
+
+nav a{
+color:var(--text);
+text-decoration:none;
+font-size:14px;
+letter-spacing:1px;
+}
+
+nav a:hover{
+color:var(--neon);
+}
+
+/* HERO */
+
+.hero{
+text-align:center;
+padding:70px 20px;
+}
+
+.hero h1{
+font-size:38px;
+color:var(--neon);
+margin-bottom:10px;
+letter-spacing:2px;
+}
+
+.hero p{
+opacity:.7;
+}
+
+/* TERMINAL */
+
+.container{
+max-width:700px;
+margin:auto;
+padding:20px;
+}
+
+.fuel-form{
+background:var(--card);
+padding:30px;
+border:1px solid #111;
+border-radius:10px;
+position:relative;
+overflow:hidden;
+}
+
+.order-id-box{
+border:1px solid var(--neon);
+padding:10px;
+margin-bottom:20px;
+text-align:center;
+letter-spacing:2px;
+font-size:13px;
+color:var(--neon);
+}
+
+.form-group{
+margin-bottom:18px;
+}
+
+label{
+font-size:13px;
+opacity:.7;
+display:block;
+margin-bottom:6px;
+}
+
+input,select,textarea{
+width:100%;
+padding:12px;
+background:#000;
+border:1px solid #222;
+color:#fff;
+border-radius:6px;
+}
+
+input:focus,select:focus,textarea:focus{
+outline:none;
+border-color:var(--neon);
+}
+
+/* SUBMIT BUTTON */
+
+.fuel-submit{
+position:relative;
+width:100%;
+padding:15px;
+background:#000;
+border:1px solid var(--neon);
+color:var(--neon);
+letter-spacing:2px;
+cursor:pointer;
+overflow:hidden;
+}
+
+.fuel-submit:hover{
+box-shadow:0 0 15px var(--neon);
+}
+
+.fuel-bar{
+position:absolute;
+left:0;
+bottom:0;
+height:4px;
+width:0%;
+background:var(--neon);
+transition:width 1s linear;
+}
+
+.fuel-submit.loading .fuel-bar{
+width:100%;
+}
+
+footer{
+text-align:center;
+padding:30px;
+margin-top:40px;
+border-top:1px solid #111;
+font-size:13px;
+opacity:.6;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<nav>
+<div>⚡ KLX REFINERIES</div>
+<ul>
+<li><a href="index.html">Home</a></li>
+<li><a href="index.html#about">About</a></li>
+<li><a href="index.html#services">Services</a></li>
+<li><a href="index.html#leaders">Leaders</a></li>
+<li><a href="index.html#gallery">Gallery</a></li>
+<li><a href="index.html#contact">Enlist</a></li>
+</ul>
+</nav>
+
+<!-- HERO -->
+
+<section class="hero">
+<h1>KLX FUEL BOOKING TERMINAL</h1>
+<p>Authorized Operators Only — Precision Dispatch System</p>
+</section>
+
+<div class="container">
+
+<form id="enlistForm" class="fuel-form">
+
+<div class="order-id-box">
+ORDER ID: <span id="liveOrderId">GENERATING...</span>
+</div>
+
+<div class="form-group">
+<label>Operator Name</label>
+<input type="text" name="Operator Name" required>
+</div>
+
+<div class="form-group">
+<label>Discord ID</label>
+<input type="text" name="Discord ID" required>
+</div>
+
+<div class="form-group">
+<label>Fuel Type</label>
+<select name="Fuel Type">
+<option>Petrol</option>
+<option>Diesel</option>
+<option>Premium</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Quantity (Litres)</label>
+<input type="number" name="Quantity" required>
+</div>
+
+<div class="form-group">
+<label>Delivery Zone</label>
+<input type="text" name="Delivery Zone">
+</div>
+
+<div class="form-group">
+<label>Priority</label>
+<select name="Priority">
+<option>Standard</option>
+<option>High</option>
+<option>Emergency</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Instructions</label>
+<textarea name="Instructions"></textarea>
+</div>
+
+<button type="submit" class="fuel-submit">
+<span class="fuel-text">DISPATCH ORDER</span>
+<div class="fuel-bar"></div>
+</button>
+
+</form>
+
+</div>
+
+<footer>
+© 2026 KLX Refineries — Fuel Dispatch Terminal
+</footer>
+
+<script>
+
+// LIVE ORDER ID FROM DISCORD INPUT
+const discordInput = document.querySelector('input[name="Discord ID"]');
+const orderDisplay = document.getElementById("liveOrderId");
+
+discordInput.addEventListener("input", ()=>{
+if(discordInput.value.trim() !== ""){
+orderDisplay.innerText = "KLX-" + discordInput.value.trim();
+}else{
+orderDisplay.innerText = "GENERATING...";
+}
+});
+
+// SUBMIT (TEST VERSION)
+document.getElementById("enlistForm")
+.addEventListener("submit",(e)=>{
+e.preventDefault();
+
+const btn=document.querySelector(".fuel-submit");
+btn.classList.add("loading");
+
+setTimeout(()=>{
+btn.classList.remove("loading");
+alert("Order Submitted (Webhook can be added here)");
+},1500);
+
+});
+
+</script>
+
+</body>
+</html>
