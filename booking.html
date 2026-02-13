@@ -1,321 +1,346 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KLX | Fuel Dispatch Control</title>
-    <style>
-        :root {
-            --bg: #050505;
-            --panel: #0f0f0f;
-            --border: #222;
-            --neon: #00ffff;
-            --neon-dim: rgba(0, 255, 255, 0.1);
-            --gold: #ffd700;
-            --text: #e0e0e0;
-            --error: #ff4444;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KLX | Fuel Dispatch Terminal</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
-        body {
-            margin: 0;
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-        }
+<style>
+:root {
+    --bg-dark: #08080a;
+    --panel-glass: rgba(18, 18, 22, 0.95);
+    --neon: #00f2ff;
+    --neon-glow: rgba(0, 242, 255, 0.3);
+    --gold: #ffcc00;
+    --border: rgba(255, 255, 255, 0.08);
+    --text-main: #e0e0e0;
+    --text-dim: #808080;
+}
 
-        /* NAVIGATION */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 5%;
-            background: rgba(0,0,0,0.9);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+* { box-sizing: border-box; transition: all 0.2s ease-in-out; }
 
-        .logo {
-            font-weight: bold;
-            letter-spacing: 2px;
-            color: var(--neon);
-            text-shadow: 0 0 10px var(--neon-dim);
-        }
+body {
+    margin: 0;
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    background-image: 
+        radial-gradient(circle at 2% 2%, rgba(0, 242, 255, 0.05) 0%, transparent 20%),
+        radial-gradient(circle at 98% 98%, rgba(255, 204, 0, 0.03) 0%, transparent 20%);
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
 
-        nav ul {
-            display: flex;
-            gap: 20px;
-            list-style: none;
-            margin: 0;
-        }
+/* --- NAVIGATION --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 60px;
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+}
 
-        nav a {
-            text-decoration: none;
-            color: #888;
-            font-size: 13px;
-            text-transform: uppercase;
-            transition: 0.3s;
-        }
+.brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--neon);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-        nav a:hover { color: var(--neon); }
+nav ul { display: flex; gap: 30px; list-style: none; }
+nav a { 
+    text-decoration: none; 
+    color: var(--text-dim); 
+    font-size: 12px; 
+    text-transform: uppercase; 
+    letter-spacing: 1px;
+}
+nav a:hover { color: var(--neon); text-shadow: 0 0 8px var(--neon-glow); }
 
-        /* HERO SECTION */
-        .hero {
-            text-align: center;
-            padding: 60px 20px;
-            background: radial-gradient(circle at center, #111 0%, #050505 100%);
-        }
+/* --- HERO --- */
+.hero {
+    text-align: center;
+    padding: 60px 20px 30px;
+}
 
-        .hero h1 {
-            font-size: 3rem;
-            margin: 0;
-            color: var(--neon);
-            text-transform: uppercase;
-            letter-spacing: 5px;
-        }
+.hero h1 {
+    font-size: clamp(24px, 5vw, 42px);
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0;
+    background: linear-gradient(to right, #fff, var(--neon));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
 
-        .hero p {
-            color: #666;
-            letter-spacing: 2px;
-            font-size: 0.9rem;
-            margin-top: 10px;
-        }
+.hero p {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text-dim);
+    font-size: 14px;
+    margin-top: 10px;
+}
 
-        /* FORM PANEL */
-        .panel {
-            max-width: 700px;
-            margin: 0 auto 80px;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 4px;
-            position: relative;
-            overflow: hidden;
-        }
+/* --- THE PANEL --- */
+.panel {
+    max-width: 800px;
+    width: 95%;
+    margin: 20px auto 60px;
+    background: var(--panel-glass);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    padding: 40px;
+    position: relative;
+    overflow: hidden;
+}
 
-        .panel::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 2px;
-            background: linear-gradient(90deg, transparent, var(--neon), transparent);
-        }
+/* Top accent bar */
+.panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 3px;
+    background: linear-gradient(90deg, var(--neon), var(--gold));
+}
 
-        .panel-content { padding: 40px; }
+.panel h2 {
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gold);
+    margin-bottom: 30px;
+    border-left: 4px solid var(--gold);
+    padding-left: 15px;
+}
 
-        h2 {
-            color: var(--gold);
-            font-weight: 300;
-            text-transform: uppercase;
-            text-align: center;
-            margin-bottom: 30px;
-            letter-spacing: 2px;
-        }
+/* ORDER ID DISPLAY */
+.order-box {
+    background: rgba(0,0,0,0.4);
+    border: 1px solid var(--neon-glow);
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 35px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        /* ORDER ID BOX */
-        .order-box {
-            background: var(--neon-dim);
-            border: 1px dashed var(--neon);
-            padding: 15px;
-            text-align: center;
-            color: var(--neon);
-            font-family: monospace;
-            font-size: 1.2rem;
-            margin-bottom: 30px;
-            border-radius: 4px;
-        }
+.order-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--text-dim);
+}
 
-        /* FORM ELEMENTS */
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
+#liveOrderId {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--neon);
+    text-shadow: 0 0 10px var(--neon-glow);
+}
 
-        .form-group { margin-bottom: 20px; }
-        .full-width { grid-column: span 2; }
+/* FORM STYLING */
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
 
-        label {
-            display: block;
-            font-size: 11px;
-            text-transform: uppercase;
-            color: #666;
-            margin-bottom: 8px;
-            margin-left: 2px;
-        }
+.form-group { margin-bottom: 20px; }
+.full-width { grid-column: span 2; }
 
-        input, select, textarea {
-            width: 100%;
-            padding: 12px;
-            background: #000;
-            border: 1px solid #333;
-            color: #fff;
-            border-radius: 4px;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
+label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
 
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: var(--neon);
-            box-shadow: 0 0 5px var(--neon-dim);
-        }
+input, select, textarea {
+    width: 100%;
+    padding: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+}
 
-        /* BUTTON */
-        button {
-            width: 100%;
-            padding: 18px;
-            background: transparent;
-            border: 1px solid var(--neon);
-            color: var(--neon);
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: 0.4s;
-            margin-top: 10px;
-        }
+input:focus, select:focus {
+    border-color: var(--neon);
+    background: rgba(0, 242, 255, 0.02);
+}
 
-        button:hover {
-            background: var(--neon);
-            color: #000;
-            box-shadow: 0 0 20px var(--neon-dim);
-        }
+/* BUTTON */
+button {
+    width: 100%;
+    padding: 18px;
+    margin-top: 10px;
+    background: var(--neon);
+    color: #000;
+    border: none;
+    border-radius: 8px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+}
 
-        footer {
-            text-align: center;
-            padding: 40px;
-            border-top: 1px solid var(--border);
-            color: #444;
-            font-size: 12px;
-        }
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px var(--neon-glow);
+    filter: brightness(1.1);
+}
 
-        @media (max-width: 600px) {
-            .form-grid { grid-template-columns: 1fr; }
-            .full-width { grid-column: span 1; }
-        }
-    </style>
+footer {
+    margin-top: auto;
+    padding: 30px;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+    border-top: 1px solid var(--border);
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .grid-container { grid-template-columns: 1fr; }
+    .full-width { grid-column: span 1; }
+    nav { padding: 20px; }
+    nav ul { display: none; } /* Simplified for mobile */
+}
+</style>
 </head>
+
 <body>
 
 <nav>
-    <div class="logo">⚡ KLX REFINERIES</div>
+    <div class="brand">⚡ KLX REFINERIES</div>
     <ul>
-        <li><a href="#">Home</a></li>
+        <li><a href="#">Network</a></li>
         <li><a href="#">Logistics</a></li>
-        <li><a href="#">Terminal</a></li>
+        <li><a href="#">Security</a></li>
     </ul>
 </nav>
 
 <section class="hero">
-    <h1>⚡ FUEL ORDER CONTROL PANEL</h1>
-    <p>KLX Industrial Dispatch System — Authorized Operators Only</p>
+    <h1>FUEL ORDER CONTROL PANEL</h1>
+    <p>// ENCRYPTED CONNECTION ESTABLISHED // ACCESS: LEVEL 4</p>
 </section>
 
 <section class="panel">
-    <div class="panel-content">
-        <h2>Fuel Dispatch Form</h2>
+    <h2>Dispatch Authorization</h2>
 
-        <div class="order-box">
-            STATUS: AUTHENTICATING... <br>
-            <span id="liveOrderId">KLX-XXXXXX</span>
-        </div>
+    <div class="order-box">
+        <span class="order-label">TRANSACTION_ID:</span>
+        <span id="liveOrderId">INITIALIZING...</span>
+    </div>
 
-        <form id="enlistForm">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label>Operator Name</label>
-                    <input type="text" name="Operator Name" placeholder="Full Name" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Discord Identity</label>
-                    <input type="text" name="Discord ID" id="discordInput" placeholder="username#0000" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Fuel Specification</label>
-                    <select name="Fuel Type">
-                        <option value="petrol">Petrol (87 Octane)</option>
-                        <option value="diesel">Industrial Diesel</option>
-                        <option value="premium">Premium (93 Octane)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Quantity (Litres)</label>
-                    <input type="number" name="Quantity" placeholder="0.00" min="1" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Delivery Zone</label>
-                    <input type="text" name="Delivery Zone" placeholder="Sector/Grid ID" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Dispatch Priority</label>
-                    <select name="Priority">
-                        <option>Standard</option>
-                        <option style="color:var(--gold)">High Priority</option>
-                        <option style="color:var(--error)">Emergency</option>
-                    </select>
-                </div>
-
-                <div class="form-group full-width">
-                    <label>Special Instructions / Logistic Notes</label>
-                    <textarea name="Instructions" rows="3" placeholder="Enter gate codes or site hazards..."></textarea>
-                </div>
+    <form id="enlistForm">
+        <div class="grid-container">
+            <div class="form-group">
+                <label>Operator Identifier</label>
+                <input type="text" name="Operator Name" placeholder="Full Legal Name" required>
             </div>
 
-            <button type="submit" id="submitBtn">INITIATE DISPATCH 🚚</button>
-        </form>
-    </div>
+            <div class="form-group">
+                <label>Discord Signature</label>
+                <input type="text" name="Discord ID" id="discordInput" placeholder="User#0000" required>
+            </div>
+
+            <div class="form-group">
+                <label>Fuel Grade</label>
+                <select name="Fuel Type">
+                    <option>Petrol (87 Octane)</option>
+                    <option>Diesel (Low Sulfur)</option>
+                    <option>Premium (93 Octane)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Volume (Liters)</label>
+                <input type="number" name="Quantity" placeholder="Ex: 5000">
+            </div>
+
+            <div class="form-group">
+                <label>Destination Zone</label>
+                <input type="text" name="Delivery Zone" placeholder="Sector Grid ID">
+            </div>
+
+            <div class="form-group">
+                <label>Dispatch Urgency</label>
+                <select name="Priority">
+                    <option>Standard Dispatch</option>
+                    <option style="color:var(--gold)">High Priority</option>
+                    <option style="color:#ff4444">Emergency Level 1</option>
+                </select>
+            </div>
+
+            <div class="form-group full-width">
+                <label>Operational Directives</label>
+                <textarea name="Instructions" rows="3" placeholder="Enter site-specific access codes or hazards..."></textarea>
+            </div>
+        </div>
+
+        <button type="submit">CONFIRM & DISPATCH 🚚</button>
+    </form>
 </section>
 
 <footer>
-    © 2026 KLX Refineries — Global Infrastructure & Energy Division <br>
-    <small>Secure Transmission Protocol Active</small>
+    &copy; 2026 KLX REFINERIES — DATA ENCRYPTED VIA AES-256 <br>
+    SYSTEM_V.4.0.2 // ALL DISPATCHES ARE LOGGED
 </footer>
 
 <script>
-    const discordInput = document.getElementById("discordInput");
-    const orderDisplay = document.getElementById("liveOrderId");
+const discordInput = document.getElementById("discordInput");
+const orderDisplay = document.getElementById("liveOrderId");
 
-    // Dynamic Order ID generation based on Discord Input
-    discordInput.addEventListener("input", () => {
-        const val = discordInput.value.trim().toUpperCase();
-        if(val !== "") {
-            // Replaces spaces with dashes and takes first 8 chars
-            const cleanVal = val.replace(/\s+/g, '-').substring(0, 10);
-            orderDisplay.innerText = "KLX-" + cleanVal;
-        } else {
-            orderDisplay.innerText = "KLX-" + Math.random().toString(36).substring(2, 8).toUpperCase();
-        }
-    });
-
-    // Initial random ID
-    function generateID() {
-        return "KLX-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+// Dynamic Order ID Logic
+discordInput.addEventListener("input", () => {
+    const rawValue = discordInput.value.trim().toUpperCase();
+    if(rawValue !== "") {
+        // Clean the input to create a cool slug
+        const slug = rawValue.replace(/[^A-Z0-9]/g, '-').substring(0, 8);
+        orderDisplay.innerText = "KLX-" + slug;
+    } else {
+        resetID();
     }
-    orderDisplay.innerText = generateID();
+});
 
-    // Form Submission Handling
-    document.getElementById('enlistForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.innerText = "TRANSMITTING...";
-        btn.style.borderColor = "var(--gold)";
-        btn.style.color = "var(--gold)";
-        
-        setTimeout(() => {
-            alert("DISPATCH SUCCESSFUL\nOrder " + orderDisplay.innerText + " has been added to the queue.");
-            btn.innerText = "DISPATCH ORDER 🚚";
-            btn.style.borderColor = "var(--neon)";
-            btn.style.color = "var(--neon)";
-            this.reset();
-            orderDisplay.innerText = generateID();
-        }, 1500);
-    });
+function resetID() {
+    const randomHex = Math.random().toString(16).substring(2, 8).toUpperCase();
+    orderDisplay.innerText = "KLX-" + randomHex;
+}
+
+// Initial Load
+resetID();
+
+// Form Interaction
+document.getElementById('enlistForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('button');
+    const originalText = btn.innerText;
+    
+    btn.innerText = "SENDING DATA...";
+    btn.style.background = "var(--gold)";
+    
+    setTimeout(() => {
+        alert("PROTOCOL SUCCESS: Order " + orderDisplay.innerText + " has been dispatched.");
+        btn.innerText = originalText;
+        btn.style.background = "var(--neon)";
+        this.reset();
+        resetID();
+    }, 1500);
+});
 </script>
 
 </body>
