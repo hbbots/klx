@@ -71,6 +71,73 @@ box-shadow: 0 0 20px var(--neon), 0 0 40px var(--violet);
 }
 .contact-link i {font-size:1.8rem; margin-right:15px;}
 
+
+.fuel-form{
+max-width:720px;
+margin:50px auto;
+background:rgba(255,255,255,0.03);
+backdrop-filter:blur(18px);
+padding:35px;
+border-radius:18px;
+border:1px solid rgba(0,234,255,0.15);
+box-shadow:0 0 35px rgba(0,255,255,0.05);
+}
+
+.form-group{
+margin-bottom:22px;
+display:flex;
+flex-direction:column;
+}
+
+.form-group label{
+color:#FFD700;
+font-size:0.8rem;
+letter-spacing:1px;
+margin-bottom:8px;
+text-transform:uppercase;
+}
+
+.fuel-form input,
+.fuel-form select,
+.fuel-form textarea{
+background:rgba(0,0,0,0.35);
+border:1px solid rgba(0,234,255,0.15);
+padding:14px;
+border-radius:8px;
+color:#fff;
+outline:none;
+transition:.3s;
+}
+
+.fuel-form input:focus,
+.fuel-form select:focus,
+.fuel-form textarea:focus{
+border-color:#00FFFF;
+box-shadow:0 0 10px rgba(0,255,255,0.2);
+}
+
+.submit-btn{
+width:100%;
+padding:16px;
+background:#FFD700;
+color:#000;
+border:none;
+border-radius:10px;
+font-weight:bold;
+letter-spacing:1px;
+cursor:pointer;
+transition:.3s;
+}
+
+.submit-btn:hover{
+box-shadow:0 0 20px rgba(255,215,0,0.5);
+transform:translateY(-2px);
+}
+
+
+        
+
+        
 footer {background:#050505; padding:50px 12% 20px; border-top:1px solid rgba(255,255,255,0.05); text-align:center;}
 .footer-content {display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:2rem; margin-bottom:30px;}
 .footer-logo {font-size:1.5rem; font-weight:bold; color:var(--gold);}
@@ -367,52 +434,62 @@ border-bottom: 2px solid var(--violet);
         <div class="card"><img src="club.jpg"></div>  
     </div>  
 </section> -->  
-<form id="enlistForm">
+<div class="fuel-form">
 
-<input name="name" placeholder="Full Name" required>
-<input name="age" placeholder="Age" required>
-<input name="discord_id" placeholder="Discord ID" required>
-<input name="roleplay_name" placeholder="RP Name">
+<h2 style="color:#00FFFF;text-align:center;margin-bottom:25px;">
+⚡ Fuel Order Control Panel
+</h2>
 
-<textarea name="experience" placeholder="Experience"></textarea>
-<textarea name="why_join" placeholder="Why join KLX?"></textarea>
+<div class="form-group">
+<label>Operator Name</label>
+<input type="text">
+</div>
 
-<button type="submit">Submit Application</button>
+<div class="form-group">
+<label>Discord ID</label>
+<input type="text">
+</div>
 
-</form>
-<section id="contact" class="reveal">  
-    <h1>Recruitment</h1>  
-    <div class="recruitment-container">  
-        <div class="contact-grid">  
-            <div class="info-panel">  
-                <h2>Join The Elite</h2>  
-                <p style="margin-bottom: 20px; color: #aaa;">We are looking for disciplined individuals to maintain the city's vital fuel supply line. Are you ready?</p>  
-                <ul>  
-                    <li><i class="fa-solid fa-check-double"></i> High Discipline & Loyalty</li>  
-                    <li><i class="fa-solid fa-truck-fast"></i> Active Participation in Shifts</li>  
-                    <li><i class="fa-solid fa-shield-halved"></i> Ability to follow Chain of Command</li>  
-                    <li><i class="fa-solid fa-microphone"></i> Clear Communication Skills</li>  
-                </ul>  
-            </div>  
-            <div class="cta-panel">  
-                <a href="https://discord.gg/TcZbvdeHr" target="_blank" class="contact-link discord">  
-                    <i class="fa-brands fa-discord"></i>  
-                    <div>  
-                        <span>Apply via Discord</span>  
-                        <p style="font-size: 0.8rem; font-weight: normal; opacity: 0.8;">Join our recruitment channel</p>  
-                    </div>  
-                </a>  
-                <a href="https://www.instagram.com/_klx_official" target="_blank" class="contact-link insta">  
-                    <i class="fa-brands fa-instagram"></i>  
-                    <div>  
-                        <span>Follow Us</span>  
-                        <p style="font-size: 0.8rem; font-weight: normal; opacity: 0.8;">@_klx_official</p>  
-                    </div>  
-                </a>  
-            </div>  
-        </div>  
-    </div>  
-</section>  <footer>  
+<div class="form-group">
+<label>Fuel Type</label>
+<select>
+<option>Petrol</option>
+<option>Diesel</option>
+<option>Jet Fuel</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Quantity (Litres)</label>
+<input type="number">
+</div>
+
+<div class="form-group">
+<label>Delivery Zone</label>
+<input type="text">
+</div>
+
+<div class="form-group">
+<label>Priority Level</label>
+<select>
+<option>Standard</option>
+<option>High Priority</option>
+<option>Emergency</option>
+</select>
+</div>
+
+<div class="form-group">
+<label>Special Instructions</label>
+<textarea rows="4"></textarea>
+</div>
+
+<button class="submit-btn">
+🚚 Dispatch Fuel Order
+</button>
+
+</div>
+
+</div>  <footer>  
     <div class="footer-content">  
         <div class="footer-logo">KLX REFINERIES</div>  
         <div class="footer-links">  
