@@ -638,12 +638,6 @@ canvas.height=window.innerHeight;
 // =============================
 // ORDER ID GENERATOR
 // =============================
-function generateOrderID(){
-return "KLX-" + Math.random().toString(36).substring(2,8).toUpperCase();
-}
-
-let currentOrderID = generateOrderID();
-document.getElementById("liveOrderId").innerText = currentOrderID;
 
 
 // =============================
@@ -701,7 +695,18 @@ btn.classList.remove("loading");
 
 });
 
-</script> <script>
+</script>
+const discordInput = document.querySelector('input[name="Discord ID"]');
+const orderDisplay = document.getElementById("liveOrderId");
+
+// live update order id when typing discord id
+discordInput.addEventListener("input", ()=>{
+if(discordInput.value.trim() !== ""){
+orderDisplay.innerText = "KLX-" + discordInput.value.trim();
+}else{
+orderDisplay.innerText = "WAITING...";
+}
+}); <script>
 
 document.getElementById("enlistForm")
 .addEventListener("submit", async (e)=>{
