@@ -2,23 +2,23 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>KLX Dispatch Terminal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KLX Fuel Booking</title>
 
 <style>
 :root{
---bg:#020202;
+--bg:#030303;
 --panel:#0a0a0a;
---border:#151515;
+--border:#141414;
 --neon:#00ffff;
 --gold:#ffd700;
 --text:#e6e6e6;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-
 body{
-background:radial-gradient(circle at top,#050505,#000);
+margin:0;
+font-family:Arial,Helvetica,sans-serif;
+background:var(--bg);
 color:var(--text);
 }
 
@@ -27,10 +27,9 @@ color:var(--text);
 nav{
 display:flex;
 justify-content:space-between;
-align-items:center;
-padding:15px 40px;
-background:#000;
+padding:18px 40px;
 border-bottom:1px solid var(--border);
+background:#000;
 }
 
 nav ul{
@@ -42,154 +41,85 @@ list-style:none;
 nav a{
 text-decoration:none;
 color:#ccc;
-font-size:13px;
-letter-spacing:1px;
+font-size:14px;
 }
 
-nav a:hover{color:var(--neon)}
+nav a:hover{color:var(--neon);}
 
 /* HERO */
 
 .hero{
 text-align:center;
-padding:70px 20px 40px;
+padding:80px 20px 40px;
 }
 
 .hero h1{
-color:var(--neon);
-font-size:38px;
+font-size:46px;
 letter-spacing:3px;
+color:var(--neon);
 margin-bottom:10px;
 }
 
-.hero p{
-opacity:.6;
-}
+/* CONTROL PANEL */
 
-/* TERMINAL CARD */
-
-.wrapper{
-max-width:900px;
+.panel{
+max-width:850px;
 margin:auto;
-padding:20px;
-}
-
-.terminal{
-background:linear-gradient(145deg,#050505,#000);
+background:var(--panel);
 border:1px solid var(--border);
-border-radius:14px;
 padding:35px;
-position:relative;
-overflow:hidden;
-box-shadow:0 0 40px rgba(0,255,255,0.05);
+border-radius:10px;
 }
 
-/* scan effect */
-.terminal::after{
-content:"";
-position:absolute;
-inset:0;
-background:linear-gradient(
-transparent,
-rgba(0,255,255,0.04),
-transparent
-);
-animation:scan 6s linear infinite;
-pointer-events:none;
-}
-
-@keyframes scan{
-0%{transform:translateY(-100%)}
-100%{transform:translateY(100%)}
-}
-
-/* ORDER ID */
-
-.order-id{
-border:1px solid var(--neon);
-padding:10px;
+.panel h2{
 text-align:center;
-letter-spacing:2px;
+color:var(--gold);
+margin-bottom:20px;
+}
+
+.order-box{
+border:1px solid var(--neon);
+padding:12px;
+text-align:center;
 color:var(--neon);
-margin-bottom:25px;
-font-size:13px;
+margin-bottom:20px;
+letter-spacing:2px;
 }
 
-/* GRID FORM */
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:18px;
-}
-
-.full{grid-column:span 2;}
-
-label{
-font-size:12px;
-opacity:.7;
-margin-bottom:6px;
-display:block;
+.form-group{
+margin-bottom:15px;
 }
 
 input,select,textarea{
 width:100%;
-padding:13px;
+padding:12px;
 background:#000;
 border:1px solid #1a1a1a;
-border-radius:7px;
 color:#fff;
+border-radius:6px;
 }
 
-input:focus,select:focus,textarea:focus{
-outline:none;
-border-color:var(--neon);
-box-shadow:0 0 10px rgba(0,255,255,0.15);
-}
-
-/* SUBMIT */
-
-.submit{
-margin-top:25px;
+button{
 width:100%;
 padding:15px;
-border:1px solid var(--neon);
 background:#000;
+border:1px solid var(--neon);
 color:var(--neon);
 letter-spacing:2px;
 cursor:pointer;
-position:relative;
-overflow:hidden;
 }
 
-.submit:hover{box-shadow:0 0 15px var(--neon)}
-
-.bar{
-position:absolute;
-bottom:0;
-left:0;
-height:4px;
-width:0%;
-background:var(--neon);
-transition:width 1s linear;
+button:hover{
+box-shadow:0 0 12px var(--neon);
 }
-
-.submit.loading .bar{width:100%}
 
 footer{
 margin-top:40px;
 padding:25px;
 text-align:center;
-font-size:13px;
-opacity:.5;
 border-top:1px solid var(--border);
-}
-
-/* responsive */
-
-@media(max-width:700px){
-.grid{grid-template-columns:1fr;}
-.full{grid-column:span 1;}
+font-size:13px;
+opacity:.6;
 }
 </style>
 </head>
@@ -209,32 +139,29 @@ border-top:1px solid var(--border);
 </nav>
 
 <section class="hero">
-<h1>FUEL DISPATCH TERMINAL</h1>
-<p>Authorized KLX Operators — Precision Booking System</p>
+<h1>⚡ FUEL ORDER CONTROL PANEL</h1>
+<p>KLX Industrial Dispatch System — Authorized Operators Only</p>
 </section>
 
-<div class="wrapper">
+<section class="panel">
 
-<form id="enlistForm" class="terminal">
+<h2>Fuel Dispatch Form</h2>
 
-<div class="order-id">
+<div class="order-box">
 ORDER ID: <span id="liveOrderId">GENERATING...</span>
 </div>
 
-<div class="grid">
+<form id="enlistForm">
 
-<div>
-<label>Operator Name</label>
-<input name="Operator Name" required>
+<div class="form-group">
+<input name="Operator Name" placeholder="Operator Name" required>
 </div>
 
-<div>
-<label>Discord ID</label>
-<input name="Discord ID" required>
+<div class="form-group">
+<input name="Discord ID" placeholder="Discord ID" required>
 </div>
 
-<div>
-<label>Fuel Type</label>
+<div class="form-group">
 <select name="Fuel Type">
 <option>Petrol</option>
 <option>Diesel</option>
@@ -242,56 +169,56 @@ ORDER ID: <span id="liveOrderId">GENERATING...</span>
 </select>
 </div>
 
-<div>
-<label>Quantity (Litres)</label>
-<input type="number" name="Quantity" required>
+<div class="form-group">
+<input type="number" name="Quantity" placeholder="Quantity (Litres)">
 </div>
 
-<div class="full">
-<label>Delivery Zone</label>
-<input name="Delivery Zone">
+<div class="form-group">
+<input name="Delivery Zone" placeholder="Delivery Zone">
 </div>
 
-<div class="full">
-<label>Instructions</label>
-<textarea name="Instructions"></textarea>
+<div class="form-group">
+<select name="Priority">
+<option>Standard</option>
+<option>High Priority</option>
+<option>Emergency</option>
+</select>
 </div>
 
+<div class="form-group">
+<textarea name="Instructions" placeholder="Special Instructions"></textarea>
 </div>
 
-<button class="submit">
-DISPATCH ORDER
-<div class="bar"></div>
-</button>
+<button type="submit">DISPATCH ORDER 🚚</button>
 
 </form>
 
-</div>
+</section>
 
 <footer>
-© 2026 KLX Refineries — Enterprise Dispatch System
+© 2026 KLX Refineries — Engineered for Excellence
 </footer>
 
 <script>
+
 const discordInput=document.querySelector('input[name="Discord ID"]');
 const orderDisplay=document.getElementById("liveOrderId");
 
 discordInput.addEventListener("input",()=>{
-orderDisplay.innerText=discordInput.value?
-"KLX-"+discordInput.value:"GENERATING...";
+if(discordInput.value.trim()!==""){
+orderDisplay.innerText="KLX-"+discordInput.value.trim();
+}else{
+orderDisplay.innerText="WAITING...";
+}
 });
 
-document.getElementById("enlistForm")
-.addEventListener("submit",(e)=>{
-e.preventDefault();
-const btn=document.querySelector(".submit");
-btn.classList.add("loading");
+function generateOrderID(){
+return "KLX-"+Math.random().toString(36).substring(2,8).toUpperCase();
+}
 
-setTimeout(()=>{
-btn.classList.remove("loading");
-alert("Order Submitted (Webhook Ready)");
-},1500);
-});
+let currentOrderID=generateOrderID();
+document.getElementById("liveOrderId").innerText=currentOrderID;
+
 </script>
 
 </body>
