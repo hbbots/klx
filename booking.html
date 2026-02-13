@@ -1,290 +1,321 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KLX | Fuel Dispatch Control</title>
+    <style>
+        :root {
+            --bg: #050505;
+            --panel: #0f0f0f;
+            --border: #222;
+            --neon: #00ffff;
+            --neon-dim: rgba(0, 255, 255, 0.1);
+            --gold: #ffd700;
+            --text: #e0e0e0;
+            --error: #ff4444;
+        }
 
-<title>KLX Fuel Booking Terminal</title>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
 
-<style>
+        /* NAVIGATION */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: rgba(0,0,0,0.9);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
 
-:root{
---bg:#020202;
---card:#0a0a0a;
---neon:#00ffff;
---gold:#ffd700;
---text:#e6e6e6;
-}
+        .logo {
+            font-weight: bold;
+            letter-spacing: 2px;
+            color: var(--neon);
+            text-shadow: 0 0 10px var(--neon-dim);
+        }
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
+        nav ul {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+            margin: 0;
+        }
 
-body{
-background:var(--bg);
-color:var(--text);
-}
+        nav a {
+            text-decoration: none;
+            color: #888;
+            font-size: 13px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
 
-/* NAVBAR */
+        nav a:hover { color: var(--neon); }
 
-nav{
-display:flex;
-justify-content:space-between;
-padding:15px 40px;
-border-bottom:1px solid #111;
-background:#000;
-}
+        /* HERO SECTION */
+        .hero {
+            text-align: center;
+            padding: 60px 20px;
+            background: radial-gradient(circle at center, #111 0%, #050505 100%);
+        }
 
-nav ul{
-display:flex;
-list-style:none;
-gap:25px;
-}
+        .hero h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: var(--neon);
+            text-transform: uppercase;
+            letter-spacing: 5px;
+        }
 
-nav a{
-color:var(--text);
-text-decoration:none;
-font-size:14px;
-letter-spacing:1px;
-}
+        .hero p {
+            color: #666;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
 
-nav a:hover{
-color:var(--neon);
-}
+        /* FORM PANEL */
+        .panel {
+            max-width: 700px;
+            margin: 0 auto 80px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+        }
 
-/* HERO */
+        .panel::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon), transparent);
+        }
 
-.hero{
-text-align:center;
-padding:70px 20px;
-}
+        .panel-content { padding: 40px; }
 
-.hero h1{
-font-size:38px;
-color:var(--neon);
-margin-bottom:10px;
-letter-spacing:2px;
-}
+        h2 {
+            color: var(--gold);
+            font-weight: 300;
+            text-transform: uppercase;
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+        }
 
-.hero p{
-opacity:.7;
-}
+        /* ORDER ID BOX */
+        .order-box {
+            background: var(--neon-dim);
+            border: 1px dashed var(--neon);
+            padding: 15px;
+            text-align: center;
+            color: var(--neon);
+            font-family: monospace;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            border-radius: 4px;
+        }
 
-/* TERMINAL */
+        /* FORM ELEMENTS */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
 
-.container{
-max-width:700px;
-margin:auto;
-padding:20px;
-}
+        .form-group { margin-bottom: 20px; }
+        .full-width { grid-column: span 2; }
 
-.fuel-form{
-background:var(--card);
-padding:30px;
-border:1px solid #111;
-border-radius:10px;
-position:relative;
-overflow:hidden;
-}
+        label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 8px;
+            margin-left: 2px;
+        }
 
-.order-id-box{
-border:1px solid var(--neon);
-padding:10px;
-margin-bottom:20px;
-text-align:center;
-letter-spacing:2px;
-font-size:13px;
-color:var(--neon);
-}
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            background: #000;
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            box-sizing: border-box;
+            transition: 0.3s;
+        }
 
-.form-group{
-margin-bottom:18px;
-}
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--neon);
+            box-shadow: 0 0 5px var(--neon-dim);
+        }
 
-label{
-font-size:13px;
-opacity:.7;
-display:block;
-margin-bottom:6px;
-}
+        /* BUTTON */
+        button {
+            width: 100%;
+            padding: 18px;
+            background: transparent;
+            border: 1px solid var(--neon);
+            color: var(--neon);
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: 0.4s;
+            margin-top: 10px;
+        }
 
-input,select,textarea{
-width:100%;
-padding:12px;
-background:#000;
-border:1px solid #222;
-color:#fff;
-border-radius:6px;
-}
+        button:hover {
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 20px var(--neon-dim);
+        }
 
-input:focus,select:focus,textarea:focus{
-outline:none;
-border-color:var(--neon);
-}
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--border);
+            color: #444;
+            font-size: 12px;
+        }
 
-/* SUBMIT BUTTON */
-
-.fuel-submit{
-position:relative;
-width:100%;
-padding:15px;
-background:#000;
-border:1px solid var(--neon);
-color:var(--neon);
-letter-spacing:2px;
-cursor:pointer;
-overflow:hidden;
-}
-
-.fuel-submit:hover{
-box-shadow:0 0 15px var(--neon);
-}
-
-.fuel-bar{
-position:absolute;
-left:0;
-bottom:0;
-height:4px;
-width:0%;
-background:var(--neon);
-transition:width 1s linear;
-}
-
-.fuel-submit.loading .fuel-bar{
-width:100%;
-}
-
-footer{
-text-align:center;
-padding:30px;
-margin-top:40px;
-border-top:1px solid #111;
-font-size:13px;
-opacity:.6;
-}
-
-</style>
+        @media (max-width: 600px) {
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+        }
+    </style>
 </head>
-
 <body>
 
-<!-- NAVBAR -->
-
 <nav>
-<div>⚡ KLX REFINERIES</div>
-<ul>
-<li><a href="index.html">Home</a></li>
-<li><a href="index.html#about">About</a></li>
-<li><a href="index.html#services">Services</a></li>
-<li><a href="index.html#leaders">Leaders</a></li>
-<li><a href="index.html#gallery">Gallery</a></li>
-<li><a href="index.html#contact">Enlist</a></li>
-</ul>
+    <div class="logo">⚡ KLX REFINERIES</div>
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Logistics</a></li>
+        <li><a href="#">Terminal</a></li>
+    </ul>
 </nav>
 
-<!-- HERO -->
-
 <section class="hero">
-<h1>KLX FUEL BOOKING TERMINAL</h1>
-<p>Authorized Operators Only — Precision Dispatch System</p>
+    <h1>⚡ FUEL ORDER CONTROL PANEL</h1>
+    <p>KLX Industrial Dispatch System — Authorized Operators Only</p>
 </section>
 
-<div class="container">
+<section class="panel">
+    <div class="panel-content">
+        <h2>Fuel Dispatch Form</h2>
 
-<form id="enlistForm" class="fuel-form">
+        <div class="order-box">
+            STATUS: AUTHENTICATING... <br>
+            <span id="liveOrderId">KLX-XXXXXX</span>
+        </div>
 
-<div class="order-id-box">
-ORDER ID: <span id="liveOrderId">GENERATING...</span>
-</div>
+        <form id="enlistForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Operator Name</label>
+                    <input type="text" name="Operator Name" placeholder="Full Name" required>
+                </div>
 
-<div class="form-group">
-<label>Operator Name</label>
-<input type="text" name="Operator Name" required>
-</div>
+                <div class="form-group">
+                    <label>Discord Identity</label>
+                    <input type="text" name="Discord ID" id="discordInput" placeholder="username#0000" required>
+                </div>
 
-<div class="form-group">
-<label>Discord ID</label>
-<input type="text" name="Discord ID" required>
-</div>
+                <div class="form-group">
+                    <label>Fuel Specification</label>
+                    <select name="Fuel Type">
+                        <option value="petrol">Petrol (87 Octane)</option>
+                        <option value="diesel">Industrial Diesel</option>
+                        <option value="premium">Premium (93 Octane)</option>
+                    </select>
+                </div>
 
-<div class="form-group">
-<label>Fuel Type</label>
-<select name="Fuel Type">
-<option>Petrol</option>
-<option>Diesel</option>
-<option>Premium</option>
-</select>
-</div>
+                <div class="form-group">
+                    <label>Quantity (Litres)</label>
+                    <input type="number" name="Quantity" placeholder="0.00" min="1" required>
+                </div>
 
-<div class="form-group">
-<label>Quantity (Litres)</label>
-<input type="number" name="Quantity" required>
-</div>
+                <div class="form-group">
+                    <label>Delivery Zone</label>
+                    <input type="text" name="Delivery Zone" placeholder="Sector/Grid ID" required>
+                </div>
 
-<div class="form-group">
-<label>Delivery Zone</label>
-<input type="text" name="Delivery Zone">
-</div>
+                <div class="form-group">
+                    <label>Dispatch Priority</label>
+                    <select name="Priority">
+                        <option>Standard</option>
+                        <option style="color:var(--gold)">High Priority</option>
+                        <option style="color:var(--error)">Emergency</option>
+                    </select>
+                </div>
 
-<div class="form-group">
-<label>Priority</label>
-<select name="Priority">
-<option>Standard</option>
-<option>High</option>
-<option>Emergency</option>
-</select>
-</div>
+                <div class="form-group full-width">
+                    <label>Special Instructions / Logistic Notes</label>
+                    <textarea name="Instructions" rows="3" placeholder="Enter gate codes or site hazards..."></textarea>
+                </div>
+            </div>
 
-<div class="form-group">
-<label>Instructions</label>
-<textarea name="Instructions"></textarea>
-</div>
-
-<button type="submit" class="fuel-submit">
-<span class="fuel-text">DISPATCH ORDER</span>
-<div class="fuel-bar"></div>
-</button>
-
-</form>
-
-</div>
+            <button type="submit" id="submitBtn">INITIATE DISPATCH 🚚</button>
+        </form>
+    </div>
+</section>
 
 <footer>
-© 2026 KLX Refineries — Fuel Dispatch Terminal
+    © 2026 KLX Refineries — Global Infrastructure & Energy Division <br>
+    <small>Secure Transmission Protocol Active</small>
 </footer>
 
 <script>
+    const discordInput = document.getElementById("discordInput");
+    const orderDisplay = document.getElementById("liveOrderId");
 
-// LIVE ORDER ID FROM DISCORD INPUT
-const discordInput = document.querySelector('input[name="Discord ID"]');
-const orderDisplay = document.getElementById("liveOrderId");
+    // Dynamic Order ID generation based on Discord Input
+    discordInput.addEventListener("input", () => {
+        const val = discordInput.value.trim().toUpperCase();
+        if(val !== "") {
+            // Replaces spaces with dashes and takes first 8 chars
+            const cleanVal = val.replace(/\s+/g, '-').substring(0, 10);
+            orderDisplay.innerText = "KLX-" + cleanVal;
+        } else {
+            orderDisplay.innerText = "KLX-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+        }
+    });
 
-discordInput.addEventListener("input", ()=>{
-if(discordInput.value.trim() !== ""){
-orderDisplay.innerText = "KLX-" + discordInput.value.trim();
-}else{
-orderDisplay.innerText = "GENERATING...";
-}
-});
+    // Initial random ID
+    function generateID() {
+        return "KLX-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    }
+    orderDisplay.innerText = generateID();
 
-// SUBMIT (TEST VERSION)
-document.getElementById("enlistForm")
-.addEventListener("submit",(e)=>{
-e.preventDefault();
-
-const btn=document.querySelector(".fuel-submit");
-btn.classList.add("loading");
-
-setTimeout(()=>{
-btn.classList.remove("loading");
-alert("Order Submitted (Webhook can be added here)");
-},1500);
-
-});
-
+    // Form Submission Handling
+    document.getElementById('enlistForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "TRANSMITTING...";
+        btn.style.borderColor = "var(--gold)";
+        btn.style.color = "var(--gold)";
+        
+        setTimeout(() => {
+            alert("DISPATCH SUCCESSFUL\nOrder " + orderDisplay.innerText + " has been added to the queue.");
+            btn.innerText = "DISPATCH ORDER 🚚";
+            btn.style.borderColor = "var(--neon)";
+            btn.style.color = "var(--neon)";
+            this.reset();
+            orderDisplay.innerText = generateID();
+        }, 1500);
+    });
 </script>
 
 </body>
