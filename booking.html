@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KLX | Fuel Dispatch Terminal</title>
+<title>KLX Dispatch Terminal</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
 <style>
-:root {
+:root{
 --bg-dark:#08080a;
 --panel-glass:rgba(18,18,22,0.95);
 --neon:#00f2ff;
@@ -18,175 +18,95 @@
 --text-main:#e0e0e0;
 --text-dim:#808080;
 }
-
-*{box-sizing:border-box;transition:all .2s ease-in-out}
-
+*{box-sizing:border-box}
 body{
 margin:0;
 font-family:'Inter',sans-serif;
-background-color:var(--bg-dark);
-background-image:
-radial-gradient(circle at 2% 2%,rgba(0,242,255,0.05)0%,transparent 20%),
-radial-gradient(circle at 98% 98%,rgba(255,204,0,0.03)0%,transparent 20%);
+background:var(--bg-dark);
 color:var(--text-main);
 display:flex;
 flex-direction:column;
 min-height:100vh;
 }
-
 nav{
 display:flex;
 justify-content:space-between;
-align-items:center;
 padding:20px 60px;
 border-bottom:1px solid var(--border);
-backdrop-filter:blur(10px);
 }
-
 .brand{
 font-family:'JetBrains Mono',monospace;
-font-weight:700;
-letter-spacing:2px;
 color:var(--neon);
+font-weight:700;
 }
-
-nav ul{display:flex;gap:30px;list-style:none}
-nav a{text-decoration:none;color:var(--text-dim);font-size:12px;text-transform:uppercase}
-nav a:hover{color:var(--neon)}
-
 .hero{text-align:center;padding:60px 20px 30px}
-
 .hero h1{
-font-size:42px;
-font-weight:800;
 background:linear-gradient(to right,#fff,var(--neon));
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 margin:0;
 }
-
-.hero p{
-font-family:'JetBrains Mono',monospace;
-color:var(--text-dim);
-font-size:14px;
-}
-
 .panel{
 max-width:800px;
-width:95%;
-margin:20px auto 60px;
+margin:auto;
 background:var(--panel-glass);
 border:1px solid var(--border);
 border-radius:16px;
-box-shadow:0 20px 40px rgba(0,0,0,0.4);
 padding:40px;
-position:relative;
 }
-
-.panel::before{
-content:'';
-position:absolute;
-top:0;left:0;width:100%;height:3px;
-background:linear-gradient(90deg,var(--neon),var(--gold));
-}
-
-.panel h2{
-font-size:18px;
-text-transform:uppercase;
-letter-spacing:3px;
-color:var(--gold);
-margin-bottom:30px;
-border-left:4px solid var(--gold);
-padding-left:15px;
-}
-
 .order-box{
-background:rgba(0,0,0,0.4);
-border:1px solid var(--neon-glow);
+background:#0003;
 padding:20px;
 border-radius:8px;
-margin-bottom:35px;
+margin-bottom:30px;
 display:flex;
 justify-content:space-between;
 }
-
-.order-label{
-font-family:'JetBrains Mono',monospace;
-font-size:12px;
-color:var(--text-dim);
-}
-
 #liveOrderId{
 font-family:'JetBrains Mono',monospace;
-font-size:20px;
-font-weight:700;
 color:var(--neon);
+font-weight:700;
 }
-
-.grid-container{
+.grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:20px;
 }
-
-.form-group{margin-bottom:20px}
-.full-width{grid-column:span 2}
-
+.full{grid-column:span 2}
 label{
-display:block;
 font-size:11px;
 color:var(--text-dim);
-text-transform:uppercase;
-margin-bottom:8px;
+display:block;
+margin-bottom:6px;
 }
-
 input,select,textarea{
 width:100%;
 padding:14px;
-background:rgba(255,255,255,0.03);
+background:#fff1;
 border:1px solid var(--border);
-color:#fff;
 border-radius:8px;
-font-size:14px;
-outline:none;
+color:#fff;
 }
-
-input:focus,select:focus{
-border-color:var(--neon);
-}
-
 button{
 width:100%;
 padding:18px;
+margin-top:20px;
 background:var(--neon);
-color:#000;
 border:none;
 border-radius:8px;
 font-weight:700;
-letter-spacing:2px;
 cursor:pointer;
-font-family:'JetBrains Mono',monospace;
 }
-
-button:hover{
-transform:translateY(-2px);
-box-shadow:0 0 25px var(--neon-glow);
-}
-
 footer{
 margin-top:auto;
-padding:30px;
+padding:20px;
 text-align:center;
-font-family:'JetBrains Mono',monospace;
 font-size:11px;
 color:var(--text-dim);
-border-top:1px solid var(--border);
 }
-
 @media(max-width:600px){
-.grid-container{grid-template-columns:1fr}
-.full-width{grid-column:span 1}
-nav ul{display:none}
+.grid{grid-template-columns:1fr}
+.full{grid-column:span 1}
 }
 </style>
 </head>
@@ -195,61 +115,49 @@ nav ul{display:none}
 
 <nav>
 <div class="brand">⚡ KLX REFINERIES</div>
-<ul>
-<li><a href="#">Network</a></li>
-<li><a href="#">Logistics</a></li>
-<li><a href="#">Security</a></li>
-</ul>
 </nav>
 
 <section class="hero">
 <h1>FUEL ORDER CONTROL PANEL</h1>
-<p>// ENCRYPTED CONNECTION ESTABLISHED //</p>
 </section>
 
 <section class="panel">
-<h2>Dispatch Authorization</h2>
 
 <div class="order-box">
-<span class="order-label">TRANSACTION_ID:</span>
-<span id="liveOrderId">INITIALIZING...</span>
+<span>ORDER ID:</span>
+<span id="liveOrderId">INIT...</span>
 </div>
 
-<form id="enlistForm">
+<form id="dispatchForm">
 
-<div class="grid-container">
+<div class="grid">
 
-<div class="form-group">
-<label>Operator Identifier</label>
-<input type="text" name="Operator Name" required>
+<div>
+<label>Discord Username (AUTO LATER)</label>
+<input type="text" name="Discord Name" id="discordInput" required>
 </div>
 
-<div class="form-group">
-<label>Discord Signature</label>
-<input type="text" name="Discord ID" id="discordInput" required>
-</div>
-
-<div class="form-group">
-<label>Fuel Grade</label>
-<select name="Fuel Type">
+<div>
+<label>Fuel Type</label>
+<select name="Fuel">
 <option>Petrol</option>
 <option>Diesel</option>
 <option>Premium</option>
 </select>
 </div>
 
-<div class="form-group">
-<label>Volume (Liters)</label>
+<div>
+<label>Quantity (L)</label>
 <input type="number" name="Quantity">
 </div>
 
-<div class="form-group">
-<label>Destination Zone</label>
-<input type="text" name="Delivery Zone">
+<div>
+<label>Zone</label>
+<input type="text" name="Zone">
 </div>
 
-<div class="form-group">
-<label>Dispatch Urgency</label>
+<div>
+<label>Priority</label>
 <select name="Priority">
 <option>Standard</option>
 <option>High Priority</option>
@@ -257,20 +165,19 @@ nav ul{display:none}
 </select>
 </div>
 
-<div class="form-group full-width">
-<label>Operational Directives</label>
+<div class="full">
+<label>Instructions</label>
 <textarea name="Instructions"></textarea>
 </div>
 
 </div>
 
-<button type="submit">CONFIRM & DISPATCH 🚚</button>
+<button type="submit">DISPATCH ORDER 🚚</button>
+
 </form>
 </section>
 
-<footer>
-© 2026 KLX REFINERIES — ALL DISPATCHES ARE LOGGED
-</footer>
+<footer>© 2026 KLX REFINERIES</footer>
 
 <script>
 const webhookURL="https://discord.com/api/webhooks/1471097575300923627/dA3VMy5M-41RtoTk47SpByVU7utobBCXufQCc6Le2krEllH5zVs9tMeM2pkBnJ40vbGP";
@@ -278,39 +185,30 @@ const webhookURL="https://discord.com/api/webhooks/1471097575300923627/dA3VMy5M-
 const discordInput=document.getElementById("discordInput");
 const orderDisplay=document.getElementById("liveOrderId");
 
-discordInput.addEventListener("input",()=>{
-const raw=discordInput.value.trim().toUpperCase();
-if(raw!==""){
-const slug=raw.replace(/[^A-Z0-9]/g,'-').substring(0,8);
-orderDisplay.innerText="KLX-"+slug;
-}else{resetID()}
-});
-
-function resetID(){
-orderDisplay.innerText="KLX-"+Math.random().toString(16).substring(2,8).toUpperCase();
+function generateID(){
+return "KLX-"+Math.random().toString(36).substring(2,8).toUpperCase();
 }
-resetID();
 
-document.getElementById("enlistForm").addEventListener("submit",async function(e){
+let currentID=generateID();
+orderDisplay.innerText=currentID;
+
+document.getElementById("dispatchForm")
+.addEventListener("submit",async function(e){
+
 e.preventDefault();
-
-const btn=this.querySelector("button");
-btn.innerText="TRANSMITTING...";
-btn.style.background="var(--gold)";
 
 const form=new FormData(this);
 
 const message={
 content:
-`🚚 **NEW FUEL ORDER**
+`🚚 NEW FUEL ORDER
 
-🆔 ${orderDisplay.innerText}
-👤 ${form.get("Operator Name")}
-💬 ${form.get("Discord ID")}
+🆔 ${currentID}
+💬 ${form.get("Discord Name")}
 
-⛽ ${form.get("Fuel Type")}
+⛽ ${form.get("Fuel")}
 📦 ${form.get("Quantity")} L
-📍 ${form.get("Delivery Zone")}
+📍 ${form.get("Zone")}
 ⚡ ${form.get("Priority")}
 
 📝 ${form.get("Instructions")||"None"}`
@@ -322,13 +220,12 @@ headers:{"Content-Type":"application/json"},
 body:JSON.stringify(message)
 });
 
-alert("ORDER SENT: "+orderDisplay.innerText);
+alert("ORDER SENT: "+currentID);
 
 this.reset();
-resetID();
+currentID=generateID();
+orderDisplay.innerText=currentID;
 
-btn.innerText="CONFIRM & DISPATCH 🚚";
-btn.style.background="var(--neon)";
 });
 </script>
 
