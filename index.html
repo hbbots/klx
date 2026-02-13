@@ -636,8 +636,18 @@ canvas.height=window.innerHeight;
 </script> <script>
 
 // =============================
-// ORDER ID GENERATOR
+// LIVE ORDER ID FROM DISCORD ID
 // =============================
+const discordInput = document.querySelector('input[name="Discord ID"]');
+const orderDisplay = document.getElementById("liveOrderId");
+
+discordInput.addEventListener("input", ()=>{
+if(discordInput.value.trim() !== ""){
+orderDisplay.innerText = "KLX-" + discordInput.value.trim();
+}else{
+orderDisplay.innerText = "GENERATING...";
+}
+});
 
 
 // =============================
