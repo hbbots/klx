@@ -128,12 +128,75 @@ letter-spacing:1px;
 cursor:pointer;
 transition:.3s;
 }
+.fuel-form::after{
+content:"";
+position:absolute;
+inset:0;
+background:linear-gradient(
+transparent,
+rgba(0,255,255,0.04),
+transparent
+);
+animation:scan 6s linear infinite;
+pointer-events:none;
+}
 
+@keyframes scan{
+0%{transform:translateY(-100%)}
+100%{transform:translateY(100%)}
+}
+        
 .submit-btn:hover{
 box-shadow:0 0 20px rgba(255,215,0,0.5);
 transform:translateY(-2px);
 }
+.order-id-box{
+border:1px solid #00ffff;
+padding:10px;
+margin-bottom:20px;
+text-align:center;
+font-size:.85rem;
+letter-spacing:2px;
+background:#020202;
+color:#00ffff;
+}
+        
 
+.fuel-submit{
+position:relative;
+width:100%;
+padding:16px;
+background:#020202;
+border:1px solid #00ffff;
+color:#00ffff;
+font-weight:600;
+letter-spacing:2px;
+overflow:hidden;
+cursor:pointer;
+transition:.3s;
+}
+
+.fuel-submit:hover{
+box-shadow:0 0 15px #00ffff;
+}
+
+.fuel-bar{
+position:absolute;
+left:0;
+bottom:0;
+height:4px;
+width:0%;
+background:#00ffff;
+transition:width 1.2s linear;
+}
+
+.fuel-submit.loading .fuel-bar{
+width:100%;
+}
+
+.fuel-submit.loading .fuel-text{
+opacity:.4;
+}
 
         
 
@@ -441,7 +504,11 @@ border-bottom: 2px solid var(--violet);
 <h2 style="color:#00FFFF;text-align:center;margin-bottom:25px;">
 ⚡ Fuel Order Control Panel
 </h2>
-
+    
+<div class="order-id-box">
+ORDER ID: <span id="liveOrderId">GENERATING...</span>
+</div>
+    
 <div class="form-group">
 <label>Operator Name</label>
 <input type="text" name="Operator Name" required>
@@ -485,8 +552,9 @@ border-bottom: 2px solid var(--violet);
 <textarea rows="4" name="Instructions"></textarea>
 </div>
 
-<button type="submit" class="submit-btn">
-🚚 Dispatch Fuel Order
+<button type="submit" class="fuel-submit">
+    <span class="fuel-text">DISPATCH ORDER🚚</span>
+    <div class="fuel-bar"></div>
 </button>
 
 </form>
@@ -571,7 +639,9 @@ document.getElementById("enlistForm")
 .addEventListener("submit", async (e)=>{
 
 e.preventDefault();
-
+const btn = document.querySelector(".fuel-submit");
+btn.classList.add("loading");
+    
 const formData = new FormData(e.target);
 const data = Object.fromEntries(formData);
 
@@ -586,7 +656,7 @@ inline:false
 }));
 
 fields.unshift({
-name:"APPLICATION ID",
+name:"Order ID",
 value: appID,
 inline:false
 });
@@ -597,7 +667,7 @@ headers:{ "Content-Type":"application/json"},
 body: JSON.stringify({
 username:"KLX Test Recruitment",
 embeds:[{
-title:"📥 Test Enlist Application",
+title:"📥 Order Application",
 color:16766720,
 fields:fields,
 timestamp:new Date()
@@ -611,5 +681,11 @@ e.target.reset();
 
 });
 
-</script> </body>  
+</script> function generateOrderID(){
+return "KLX-" + Math.random().toString(36).substring(2,8).toUpperCase();
+}
+
+let currentOrderID = generateOrderID();
+document.getElementById("liveOrderId").innerText = currentOrderID;
+</body>  
 </html>  
