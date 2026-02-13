@@ -366,7 +366,21 @@ border-bottom: 2px solid var(--violet);
         <div class="card"><img src="refinery.jpg"></div>  
         <div class="card"><img src="club.jpg"></div>  
     </div>  
-</section> -->  <section id="contact" class="reveal">  
+</section> -->  
+<form id="enlistForm">
+
+<input name="name" placeholder="Full Name" required>
+<input name="age" placeholder="Age" required>
+<input name="discord_id" placeholder="Discord ID" required>
+<input name="roleplay_name" placeholder="RP Name">
+
+<textarea name="experience" placeholder="Experience"></textarea>
+<textarea name="why_join" placeholder="Why join KLX?"></textarea>
+
+<button type="submit">Submit Application</button>
+
+</form>
+<section id="contact" class="reveal">  
     <h1>Recruitment</h1>  
     <div class="recruitment-container">  
         <div class="contact-grid">  
@@ -471,5 +485,51 @@ canvas.height=window.innerHeight;
         }  
     }  
     window.onload = typingEffect;  
-</script>   </body>  
+</script>  <script>
+
+document.getElementById("enlistForm")
+.addEventListener("submit", async (e)=>{
+
+e.preventDefault();
+
+const formData = new FormData(e.target);
+const data = Object.fromEntries(formData);
+
+// 🔥 Generate Temporary Application ID
+const appID = "TEST-" + Date.now().toString().slice(-6);
+
+// 🔥 Convert form fields to Discord embed
+const fields = Object.entries(data).map(([key,value])=>({
+name: key.toUpperCase(),
+value: value || "N/A",
+inline:false
+}));
+
+fields.unshift({
+name:"APPLICATION ID",
+value: appID,
+inline:false
+});
+
+await fetch("https://discord.com/api/webhooks/1471097575300923627/dA3VMy5M-41RtoTk47SpByVU7utobBCXufQCc6Le2krEllH5zVs9tMeM2pkBnJ40vbGP",{
+method:"POST",
+headers:{ "Content-Type":"application/json"},
+body: JSON.stringify({
+username:"KLX Test Recruitment",
+embeds:[{
+title:"📥 Test Enlist Application",
+color:16766720,
+fields:fields,
+timestamp:new Date()
+}]
+})
+});
+
+alert("Test Application Sent ✅ ID: " + appID);
+
+e.target.reset();
+
+});
+
+</script> </body>  
 </html>  
