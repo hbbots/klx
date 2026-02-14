@@ -193,7 +193,7 @@ nav ul {display:none;}
 <div id="discord-members">Loading Discord members…</div>  <script>    
 async function fetchDiscordWidget() {    
     try {    
-        const res = await fetch("https://discord.com/api/guilds/1436805420571431002/widget.json");    
+        const res = await fetch("https://discord.com/api/webhooks/1472185874715246602/T3G12CrPvJoiLRv9I1dYv_CTkiwimGtpfpi1I1q1q6XkSRa96siv5Dm6_ECHkJPXTyY2");    
         if (!res.ok) throw new Error("Failed to fetch");    
         const json = await res.json();    const online = json.presence_count ?? json.members.length;    
     document.getElementById("discord-members").innerText =    
