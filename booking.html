@@ -238,14 +238,16 @@ window.addEventListener("load", async () => {
 
   document.getElementById("userInfo").innerText = "Checking session...";
 
- 
-  await supabaseClient.auth.exchangeCodeForSession(window.location.href);
+  let session = null;
 
-  const { data: { session }, error } = await supabaseClient.auth.getSession();
+  // 🔥 Wait for session (important for GitHub Pages)
+  for(let i = 0; i < 5; i++){
+    const { data } = await supabaseClient.auth.getSession();
+    session = data.session;
 
-  if(error){
-    console.log("Session error:", error);
-    return;
+    if(session) break;
+
+    await new Promise(r => setTimeout(r, 500)); // wait 0.5 sec
   }
 
   if(!session){
@@ -256,7 +258,7 @@ window.addEventListener("load", async () => {
   console.log("SESSION OK:", session);
 
   await checkUser();
-});
+});;
 
 // ===== CHECK USER =====
 async function checkUser(){
@@ -274,10 +276,13 @@ async function checkUser(){
   }
 
   // 🔥 IMPORTANT FIX
-  discordId =
-    user.user_metadata.provider_id ||
-    user.user_metadata.sub ||
-    user.id;
+ discordId =
+  user.user_metadata.provider_id ||
+  user.user_metadata.sub ||
+  user.identities?.[0]?.identity_data?.sub ||
+  user.id;
+
+console.log("Discord ID:", discordId);
 
   discordName =
     user.user_metadata.name ||
