@@ -227,9 +227,28 @@ async function login(){
   await supabaseClient.auth.signInWithOAuth({
     provider: 'discord',
     options: {
-      redirectTo: "https://hbbots.github.io/klx/booking.html"
+      redirectTo: window.location.origin + "/klx/booking.html"
     }
   });
+}
+
+
+// ===== HANDLE OAUTH REDIRECT (IMPORTANT FIX)
+async function handleOAuth(){
+
+  const hash = window.location.hash;
+
+  if(hash && hash.includes("access_token")){
+    console.log("OAuth redirect detected");
+
+    await supabaseClient.auth.setSession({
+      access_token: new URLSearchParams(hash.substring(1)).get("access_token"),
+      refresh_token: new URLSearchParams(hash.substring(1)).get("refresh_token")
+    });
+
+    // Clean URL
+    window.history.replaceState({}, document.title, window.location.pathname);
+  }
 }
 
 
@@ -238,17 +257,11 @@ window.addEventListener("load", async () => {
 
   document.getElementById("userInfo").innerText = "Checking session...";
 
-  let session = null;
+  // 🔥 STEP 1: HANDLE REDIRECT
+  await handleOAuth();
 
-  // 🔥 Wait for session (important for GitHub Pages)
-  for(let i = 0; i < 5; i++){
-    const { data } = await supabaseClient.auth.getSession();
-    session = data.session;
-
-    if(session) break;
-
-    await new Promise(r => setTimeout(r, 500)); // wait 0.5 sec
-  }
+  // 🔥 STEP 2: GET SESSION
+  const { data: { session } } = await supabaseClient.auth.getSession();
 
   if(!session){
     document.getElementById("userInfo").innerText = "Please login";
@@ -258,35 +271,29 @@ window.addEventListener("load", async () => {
   console.log("SESSION OK:", session);
 
   await checkUser();
-});;
+});
+
 
 // ===== CHECK USER =====
 async function checkUser(){
 
   const { data: { user }, error } = await supabaseClient.auth.getUser();
 
-  if(error){
-    console.log(error);
-    return;
-  }
-
-  if(!user){
+  if(error || !user){
     document.getElementById("userInfo").innerText = "Not logged in";
     return;
   }
 
-  // 🔥 IMPORTANT FIX
- discordId =
-  user.user_metadata.provider_id ||
-  user.user_metadata.sub ||
-  user.identities?.[0]?.identity_data?.sub ||
-  user.id;
-
-console.log("Discord ID:", discordId);
+  // 🔥 GET DISCORD ID (IMPORTANT)
+  discordId =
+    user.user_metadata?.provider_id ||
+    user.user_metadata?.sub ||
+    user.identities?.[0]?.identity_data?.sub ||
+    user.id;
 
   discordName =
-    user.user_metadata.name ||
-    user.user_metadata.full_name ||
+    user.user_metadata?.name ||
+    user.user_metadata?.full_name ||
     user.email ||
     "User";
 
@@ -296,18 +303,18 @@ console.log("Discord ID:", discordId);
   console.log("Discord ID:", discordId);
 
   // ===== CHECK PUMP OWNER =====
-  const { data } = await supabaseClient
+  const { data, error: dbError } = await supabaseClient
     .from('pump_owners')
     .select('discord_id')
     .eq('discord_id', discordId)
     .maybeSingle();
 
+  console.log("DB:", data, dbError);
+
   if(!data){
     document.getElementById("dispatchForm").style.display = "none";
-
     document.getElementById("userInfo").innerText =
       "❌ Access Denied (Not Pump Owner)";
-
     return;
   }
 
@@ -346,7 +353,6 @@ document.getElementById("dispatchForm")
 
   try{
 
-    // SAVE DB
     const { error } = await supabaseClient.from('fuel_orders').insert([{
       order_id: currentID,
       discord_id: discordId,
@@ -365,7 +371,6 @@ document.getElementById("dispatchForm")
       return;
     }
 
-    // DISCORD
     await fetch(webhookURL,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -403,6 +408,7 @@ document.getElementById("dispatchForm")
 });
 
 </script>
+
 
 </body>
 </html>
