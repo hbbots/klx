@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KLX Login</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:#08080a;
+  color:white;
+  font-family:sans-serif;
+}
+
+.box{
+  background:#121216;
+  padding:40px;
+  border-radius:12px;
+  text-align:center;
+}
+
+button{
+  padding:15px 30px;
+  border:none;
+  background:#ffcc00;
+  font-weight:bold;
+  cursor:pointer;
+  border-radius:8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+  <h2>KLX Pump Owner Login</h2>
+  <p id="status">Please login</p>
+  <button onclick="login()">Login with Discord</button>
+</div>
+
+<script>
+
+// 🔥 SUPABASE
+const supabaseClient = supabase.createClient(
+  "https://lsyvokccmpckkagjxwfk.supabase.co",
+  "sb_publishable_8pKsREsvvFQiJ8v4LUBp0w_qmWyxlK4"
+);
+
+// ===== LOGIN =====
+async function login(){
+  await supabaseClient.auth.signInWithOAuth({
+    provider: 'discord',
+    options: {
+      redirectTo: "https://hbbots.github.io/klx/booking.html"
+    }
+  });
+}
+
+// ===== AUTO REDIRECT IF ALREADY LOGGED =====
+window.addEventListener("load", async () => {
+
+  const { data: { session } } = await supabaseClient.auth.getSession();
+
+  if(session){
+    window.location.href = "booking.html";
+  }
+
+});
+</script>
+
+</body>
+</html>
