@@ -6,7 +6,7 @@ async function login(){
   await supabaseClient.auth.signInWithOAuth({
     provider: 'discord',
     options: {
-      redirectTo: "https://hbbots.github.io/klx/"
+      redirectTo: "https://hbbots.github.io/klx/booking.html"
     }
   });
 }
@@ -16,7 +16,6 @@ window.addEventListener("load", async () => {
 
   document.getElementById("userInfo").innerText = "Checking session...";
 
-  // Wait for session
   const { data: { session }, error } = await supabaseClient.auth.getSession();
 
   if(error){
@@ -25,7 +24,8 @@ window.addEventListener("load", async () => {
   }
 
   if(!session){
-    document.getElementById("userInfo").innerText = "Not logged in";
+    document.getElementById("userInfo").innerText = "Redirecting to login...";
+    login(); // 🔥 force login
     return;
   }
 
@@ -33,7 +33,6 @@ window.addEventListener("load", async () => {
 
   await checkUser();
 });
-
 // ===== CHECK USER =====
 async function checkUser(){
 
