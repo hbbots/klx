@@ -1,221 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>KLX Dispatch Terminal</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-<style>
-:root{
---bg-dark:#08080a;
---panel-glass:rgba(18,18,22,0.95);
---neon:#00f2ff;
---border:rgba(255,255,255,0.08);
---text-main:#e0e0e0;
---text-dim:#808080;
---gold:#ffcc00;
-}
-
-*{box-sizing:border-box}
-
-body{
-margin:0;
-font-family:'Inter',sans-serif;
-background:var(--bg-dark);
-color:var(--text-main);
-display:flex;
-flex-direction:column;
-min-height:100vh;
-}
-
-nav{
-display:flex;
-justify-content:space-between;
-padding:20px 60px;
-border-bottom:1px solid var(--border);
-}
-
-.brand{
-font-family:'JetBrains Mono',monospace;
-color:var(--neon);
-font-weight:700;
-}
-
-.hero{text-align:center;padding:50px 20px}
-
-.panel{
-max-width:800px;
-margin:auto;
-background:var(--panel-glass);
-border:1px solid var(--border);
-border-radius:16px;
-padding:40px;
-}
-
-.order-box{
-background:#0003;
-padding:15px;
-border-radius:8px;
-margin-bottom:20px;
-display:flex;
-justify-content:space-between;
-}
-
-#liveOrderId{
-color:var(--neon);
-font-weight:700;
-font-family:'JetBrains Mono';
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-.full{grid-column:span 2}
-
-label{
-font-size:11px;
-color:var(--text-dim);
-display:block;
-margin-bottom:5px;
-}
-
-input,select,textarea{
-width:100%;
-padding:14px;
-background:#fff1;
-border:1px solid var(--border);
-border-radius:8px;
-color:#fff;
-}
-
-button{
-width:100%;
-padding:18px;
-margin-top:20px;
-background:var(--neon);
-border:none;
-border-radius:8px;
-font-weight:700;
-cursor:pointer;
-}
-
-.login-btn{
-background:var(--gold);
-color:#000;
-margin-bottom:10px;
-}
-
-.user-info{
-font-size:12px;
-margin-bottom:10px;
-color:var(--text-dim);
-}
-
-footer{
-margin-top:auto;
-padding:20px;
-text-align:center;
-font-size:11px;
-color:var(--text-dim);
-}
-
-@media(max-width:600px){
-.grid{grid-template-columns:1fr}
-.full{grid-column:span 1}
-}
-</style>
-</head>
-
-<body>
-
-<nav>
-<div class="brand">⚡ KLX REFINERIES</div>
-</nav>
-
-<section class="hero">
-<h1>FUEL ORDER CONTROL PANEL</h1>
-</section>
-
-<section class="panel">
-
-<button class="login-btn" onclick="login()">Login with Discord</button>
-
-<div class="user-info" id="userInfo">Checking login...</div>
-
-<div class="order-box">
-<span>ORDER ID:</span>
-<span id="liveOrderId">INIT...</span>
-</div>
-
-<form id="dispatchForm" style="display:none">
-
-<div class="grid">
-
-<div>
-<label>In Game Name</label>
-<input type="text" name="GameName" required>
-</div>
-
-<div>
-<label>Fuel Type</label>
-<select name="Fuel">
-<option>Regular</option>
-<option>Plus</option>
-<option>Diesel</option>
-<option>Premium</option>
-</select>
-</div>
-
-<div>
-<label>Quantity (L)</label>
-<input type="number" name="Quantity" required>
-</div>
-
-<div>
-<label>Zone</label>
-<input type="text" name="Zone" required>
-</div>
-
-<div>
-<label>Priority</label>
-<select name="Priority">
-<option>Standard</option>
-<option>High Priority</option>
-<option>Emergency</option>
-</select>
-</div>
-
-<div class="full">
-<label>Instructions</label>
-<textarea name="Instructions"></textarea>
-</div>
-
-</div>
-
-<button type="submit">DISPATCH ORDER 🚚</button>
-
-</form>
-
-</section>
-
-<footer>© 2026 KLX REFINERIES</footer>
-
-<script>
-
-const supabaseClient = supabase.createClient(
-  "https://lsyvokccmpckkagjxwfk.supabase.co", 
- "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzeXZva2NjbXBja2thZ2p4d2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwNjkzMDcsImV4cCI6MjA4NjY0NTMwN30.FvGctxmYG98QRNzDANx2-YzlHK8zOCf7d6YWnQ60Rvo" );
-
-  
-const webhookURL = "https://discord.com/api/webhooks/1471097575300923a627/dA3VMy5M-41RtoTk47SpByVU7utobBCXufQCc6Le2krEllH5zVs9tMeM2pkBnJ40vbGP";
-  
 let discordName = null;
 let discordId = null;
 
@@ -224,27 +6,33 @@ async function login(){
   await supabaseClient.auth.signInWithOAuth({
     provider: 'discord',
     options: {
-     redirectTo: "https://hbbots.github.io/klx/"
+      redirectTo: "https://hbbots.github.io/klx/"
     }
   });
 }
 
-// ===== HANDLE LOGIN REDIRECT =====
-async function handleSession(){
+// ===== MAIN LOAD =====
+window.addEventListener("load", async () => {
 
-  // This extracts token from URL after login
-  const { data, error } = await supabaseClient.auth.getSession();
+  document.getElementById("userInfo").innerText = "Checking session...";
+
+  // Wait for session
+  const { data: { session }, error } = await supabaseClient.auth.getSession();
 
   if(error){
-    console.log(error);
+    console.log("Session error:", error);
     return;
   }
 
-  if(data.session){
-    checkUser();
+  if(!session){
+    document.getElementById("userInfo").innerText = "Not logged in";
+    return;
   }
 
-}
+  console.log("Session found");
+
+  await checkUser();
+});
 
 // ===== CHECK USER =====
 async function checkUser(){
@@ -252,54 +40,51 @@ async function checkUser(){
   const { data: { user }, error } = await supabaseClient.auth.getUser();
 
   if(error){
-    console.log(error);
+    console.log("User error:", error);
     return;
   }
 
-  if(user){
+  if(!user){
+    document.getElementById("userInfo").innerText = "Not logged in";
+    return;
+  }
 
-    discordId = user.id;
-    discordName =
-      user.user_metadata.name ||
-      user.user_metadata.full_name ||
-      user.email ||
-      "User";
+  console.log("USER:", user);
+
+  discordId = user.id;
+  discordName =
+    user.user_metadata.name ||
+    user.user_metadata.full_name ||
+    user.email ||
+    "User";
+
+  document.getElementById("userInfo").innerText =
+    "Logged in as: " + discordName;
+
+  console.log("Discord ID:", discordId);
+
+  // ===== CHECK PUMP OWNER =====
+  const { data, error: dbError } = await supabaseClient
+    .from('pump_owners')
+    .select('discord_id')
+    .eq('discord_id', discordId)
+    .maybeSingle();
+
+  console.log("DB RESULT:", data, dbError);
+
+  if(!data){
+    document.getElementById("dispatchForm").style.display = "none";
 
     document.getElementById("userInfo").innerText =
-      "Logged in as: " + discordName;
+      "❌ Access Denied (Not Pump Owner)";
 
-    // ===== CHECK PUMP OWNER =====
-    const { data, error } = await supabaseClient
-      .from('pump_owners')
-      .select('discord_id')
-      .eq('discord_id', discordId)
-      .single();
-
-    if(error || !data){
-      document.getElementById("dispatchForm").style.display = "none";
-      alert("❌ Access Denied: Not a Pump Owner");
-
-      // Optional redirect
-      setTimeout(()=>{
-        window.location.href = "/";
-      }, 1500);
-
-      return;
-    }
-
-    // ✅ ACCESS GRANTED
-    document.getElementById("dispatchForm").style.display = "block";
-
-  } else {
-    document.getElementById("userInfo").innerText = "Not logged in";
+    // 🚫 REMOVE REDIRECT (IMPORTANT)
+    return;
   }
-}
 
-// ===== AUTO LOGIN CHECK =====
-window.addEventListener("load", async () => {
-  await handleSession();
-  await checkUser();
-});
+  // ✅ ACCESS GRANTED
+  document.getElementById("dispatchForm").style.display = "block";
+}
 
 // ===== ORDER ID =====
 const orderDisplay = document.getElementById("liveOrderId");
@@ -324,14 +109,12 @@ document.getElementById("dispatchForm")
 
   const form = new FormData(this);
 
-  // Disable button to prevent spam
   const btn = this.querySelector("button");
   btn.disabled = true;
   btn.innerText = "Processing...";
 
   try{
 
-    // ===== SAVE TO DB =====
     const { error } = await supabaseClient.from('fuel_orders').insert([{
       order_id: currentID,
       discord_id: discordId,
@@ -352,7 +135,6 @@ document.getElementById("dispatchForm")
       return;
     }
 
-    // ===== SEND TO DISCORD =====
     await fetch(webhookURL,{
       method:"POST",
       headers:{"Content-Type":"application/json"},
@@ -390,5 +172,3 @@ document.getElementById("dispatchForm")
 });
 
 </script>
-</body>
-</html>
