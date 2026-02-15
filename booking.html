@@ -238,6 +238,9 @@ window.addEventListener("load", async () => {
 
   document.getElementById("userInfo").innerText = "Checking session...";
 
+ 
+  await supabaseClient.auth.exchangeCodeForSession(window.location.href);
+
   const { data: { session }, error } = await supabaseClient.auth.getSession();
 
   if(error){
@@ -246,13 +249,14 @@ window.addEventListener("load", async () => {
   }
 
   if(!session){
-    document.getElementById("userInfo").innerText = "Please login...";
+    document.getElementById("userInfo").innerText = "Please login";
     return;
   }
 
+  console.log("SESSION OK:", session);
+
   await checkUser();
 });
-
 
 // ===== CHECK USER =====
 async function checkUser(){
