@@ -221,68 +221,91 @@ let discordId = null;
 
 // ===== LOGIN =====
 async function login(){
-await supabaseClient.auth.signInWithOAuth({
-provider: 'discord',
-options: {
-redirectTo: window.location.origin   // FIXED
-}
-});
+  await supabaseClient.auth.signInWithOAuth({
+    provider: 'discord',
+    options: {
+      redirectTo: window.location.origin // IMPORTANT
+    }
+  });
 }
 
-// ===== HANDLE LOGIN RETURN =====
-supabaseClient.auth.onAuthStateChange((event, session) => {
-if(session){
-checkUser();
+// ===== HANDLE LOGIN REDIRECT =====
+async function handleSession(){
+
+  // This extracts token from URL after login
+  const { data, error } = await supabaseClient.auth.getSession();
+
+  if(error){
+    console.log(error);
+    return;
+  }
+
+  if(data.session){
+    checkUser();
+  }
+
 }
-});
 
 // ===== CHECK USER =====
 async function checkUser(){
 
-const { data: { user } } = await supabaseClient.auth.getUser();
+  const { data: { user }, error } = await supabaseClient.auth.getUser();
 
-if(user){
+  if(error){
+    console.log(error);
+    return;
+  }
 
-discordId = user.id;
-discordName = user.user_metadata.name || user.user_metadata.full_name || "User";
+  if(user){
 
-document.getElementById("userInfo").innerText =
-"Logged in as: " + discordName;
+    discordId = user.id;
+    discordName =
+      user.user_metadata.name ||
+      user.user_metadata.full_name ||
+      user.email ||
+      "User";
 
-// ===== CHECK ACCESS =====
-const { data, error } = await supabaseClient
-.from('pump_owners')
-.select('*')
-.eq('discord_id', discordId);
+    document.getElementById("userInfo").innerText =
+      "Logged in as: " + discordName;
 
-if(error){
-console.log(error);
-alert("Database error");
-return;
+    // ===== CHECK PUMP OWNER =====
+    const { data, error } = await supabaseClient
+      .from('pump_owners')
+      .select('discord_id')
+      .eq('discord_id', discordId)
+      .single();
+
+    if(error || !data){
+      document.getElementById("dispatchForm").style.display = "none";
+      alert("❌ Access Denied: Not a Pump Owner");
+
+      // Optional redirect
+      setTimeout(()=>{
+        window.location.href = "/";
+      }, 1500);
+
+      return;
+    }
+
+    // ✅ ACCESS GRANTED
+    document.getElementById("dispatchForm").style.display = "block";
+
+  } else {
+    document.getElementById("userInfo").innerText = "Not logged in";
+  }
 }
 
-if(data && data.length > 0){
-document.getElementById("dispatchForm").style.display = "block";
-}else{
-document.getElementById("dispatchForm").style.display = "none";
-alert("Access Denied: Not a pump owner");
-}
-
-}else{
-document.getElementById("userInfo").innerText = "Not logged in";
-}
-}
-
-// ===== LOAD USER ON PAGE LOAD =====
-window.addEventListener("load", () => {
-checkUser();
+// ===== AUTO LOGIN CHECK =====
+window.addEventListener("load", async () => {
+  await handleSession();
+  await checkUser();
 });
 
 // ===== ORDER ID =====
 const orderDisplay = document.getElementById("liveOrderId");
 
 function generateID(){
-return "KLX-" + Math.random().toString(36).substring(2,8).toUpperCase();
+  return "KLX-" + Math.random().toString(36).substring(2,8).toUpperCase();
 }
 
 let currentID = generateID();
@@ -292,42 +315,49 @@ orderDisplay.innerText = currentID;
 document.getElementById("dispatchForm")
 .addEventListener("submit", async function(e){
 
-e.preventDefault();
+  e.preventDefault();
 
-if(!discordId){
-alert("Login required");
-return;
-}
+  if(!discordId){
+    alert("Login required");
+    return;
+  }
 
-const form = new FormData(this);
+  const form = new FormData(this);
 
-// ===== SAVE TO DB =====
-const { error } = await supabaseClient.from('fuel_orders').insert([
-{
-order_id: currentID,
-discord_id: discordId,
-discord_name: discordName,
-ingame_name: form.get("GameName"),
-fuel: form.get("Fuel"),
-quantity: form.get("Quantity"),
-zone: form.get("Zone"),
-priority: form.get("Priority"),
-instructions: form.get("Instructions")
-}
-]);
+  // Disable button to prevent spam
+  const btn = this.querySelector("button");
+  btn.disabled = true;
+  btn.innerText = "Processing...";
 
-if(error){
-console.log(error);
-alert("Database error");
-return;
-}
+  try{
 
-// ===== SEND TO DISCORD =====
-await fetch(webhookURL,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-content:
+    // ===== SAVE TO DB =====
+    const { error } = await supabaseClient.from('fuel_orders').insert([{
+      order_id: currentID,
+      discord_id: discordId,
+      discord_name: discordName,
+      ingame_name: form.get("GameName"),
+      fuel: form.get("Fuel"),
+      quantity: form.get("Quantity"),
+      zone: form.get("Zone"),
+      priority: form.get("Priority"),
+      instructions: form.get("Instructions")
+    }]);
+
+    if(error){
+      console.log(error);
+      alert("❌ Database error");
+      btn.disabled = false;
+      btn.innerText = "DISPATCH ORDER 🚚";
+      return;
+    }
+
+    // ===== SEND TO DISCORD =====
+    await fetch(webhookURL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        content:
 `🚚 NEW FUEL ORDER
 
 🆔 ${currentID}
@@ -340,18 +370,25 @@ content:
 ⚡ ${form.get("Priority")}
 
 📝 ${form.get("Instructions") || "None"}`
-})
-});
+      })
+    });
 
-alert("ORDER SENT: " + currentID);
+    alert("✅ ORDER SENT: " + currentID);
 
-this.reset();
-currentID = generateID();
-orderDisplay.innerText = currentID;
+    this.reset();
+    currentID = generateID();
+    orderDisplay.innerText = currentID;
+
+  } catch(err){
+    console.log(err);
+    alert("Something went wrong");
+  }
+
+  btn.disabled = false;
+  btn.innerText = "DISPATCH ORDER 🚚";
 
 });
 
 </script>
-
 </body>
 </html>
