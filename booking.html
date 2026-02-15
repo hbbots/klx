@@ -7,6 +7,8 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
 <style>
 :root{
 --bg-dark:#08080a;
@@ -97,6 +99,16 @@ border-radius:8px;
 font-weight:700;
 cursor:pointer;
 }
+.login-btn{
+background:var(--gold);
+color:#000;
+margin-bottom:20px;
+}
+.user-info{
+font-size:12px;
+margin-bottom:15px;
+color:var(--text-dim);
+}
 footer{
 margin-top:auto;
 padding:20px;
@@ -123,6 +135,10 @@ color:var(--text-dim);
 
 <section class="panel">
 
+<button class="login-btn" onclick="login()">Login with Discord</button>
+
+<div class="user-info" id="userInfo">Not logged in</div>
+
 <div class="order-box">
 <span>ORDER ID:</span>
 <span id="liveOrderId">INIT...</span>
@@ -135,11 +151,6 @@ color:var(--text-dim);
 <div>
 <label>In Game Name</label>
 <input type="text" name="GameName" required>
-</div>
-
-<div>
-<label>Discord Name</label>
-<input type="text" name="DiscordName" required>
 </div>
 
 <div>
@@ -186,8 +197,70 @@ color:var(--text-dim);
 <footer>© 2026 KLX REFINERIES</footer>
 
 <script>
+
+
+
+  
+const supabase = supabase.createClient(
+"https://lsyvokccmpckkagjxwfk.supabase.co",
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxzeXZva2NjbXBja2thZ2p4d2ZrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzEwNjkzMDcsImV4cCI6MjA4NjY0NTMwN30.FvGctxmYG98QRNzDANx2-YzlHK8zOCf7d6YWnQ60Rvo"
+);
+
+
 const webhookURL="https://discord.com/api/webhooks/1471097575300923627/dA3VMy5M-41RtoTk47SpByVU7utobBCXufQCc6Le2krEllH5zVs9tMeM2pkBnJ40vbGP";
 
+
+  
+let discordName=null;
+let discordId=null;
+
+
+
+  
+async function login(){
+await supabase.auth.signInWithOAuth({
+provider:'discord'
+});
+}
+
+
+
+  
+async function checkUser(){
+
+const { data:{ user } } = await supabase.auth.getUser();
+
+if(user){
+
+discordName = user.user_metadata.full_name;
+discordId = user.id;
+
+document.getElementById("userInfo").innerText =
+"Logged in as: "+discordName;
+
+
+
+  
+const { data } = await supabase
+.from('pump_owners')
+.select('*')
+.eq('discord_id', discordId);
+
+if(!data.length){
+alert("Access Denied: Not a pump owner");
+document.getElementById("dispatchForm").style.display="none";
+}
+
+}else{
+document.getElementById("userInfo").innerText="Not logged in";
+}
+
+}
+
+checkUser();
+
+
+  
 const orderDisplay=document.getElementById("liveOrderId");
 
 function generateID(){
@@ -197,20 +270,49 @@ return "KLX-"+Math.random().toString(36).substring(2,8).toUpperCase();
 let currentID=generateID();
 orderDisplay.innerText=currentID;
 
+// ===== FORM SUBMIT =====
 document.getElementById("dispatchForm")
 .addEventListener("submit",async function(e){
 
 e.preventDefault();
 
+if(!discordId){
+alert("Login required");
+return;
+}
+
 const form=new FormData(this);
 
-const message={
+
+
+  
+await supabase.from('fuel_orders').insert([
+{
+order_id: currentID,
+discord_id: discordId,
+discord_name: discordName,
+ingame_name: form.get("GameName"),
+fuel: form.get("Fuel"),
+quantity: form.get("Quantity"),
+zone: form.get("Zone"),
+priority: form.get("Priority"),
+instructions: form.get("Instructions")
+}
+]);
+
+
+
+  
+await fetch(webhookURL,{
+method:"POST",
+headers:{"Content-Type":"application/json"},
+body:JSON.stringify({
 content:
 `🚚 NEW FUEL ORDER
 
 🆔 ${currentID}
+👤 ${discordName}
 🎮 ${form.get("GameName")}
-💬 ${form.get("DiscordName")}
 
 ⛽ ${form.get("Fuel")}
 📦 ${form.get("Quantity")} L
@@ -218,12 +320,7 @@ content:
 ⚡ ${form.get("Priority")}
 
 📝 ${form.get("Instructions")||"None"}`
-};
-
-await fetch(webhookURL,{
-method:"POST",
-headers:{"Content-Type":"application/json"},
-body:JSON.stringify(message)
+})
 });
 
 alert("ORDER SENT: "+currentID);
@@ -233,6 +330,7 @@ currentID=generateID();
 orderDisplay.innerText=currentID;
 
 });
+
 </script>
 
 </body>
